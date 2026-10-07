@@ -1,7 +1,3 @@
-import coupleIllustration from '@/Couple_line_art_illustration_20261007114013.jpg';
-import couplePosing from '@/Couple_posing_together_line_art_20261007114015.jpg';
-import coupleElevator from '@/Couple_taking_elevator_mirror_se…_20261007114017.jpg';
-
 export interface ColoringPage {
   id: string;
   title: {
@@ -17,60 +13,102 @@ export interface ColoringPage {
   renderLineArt?: (ctx: CanvasRenderingContext2D, width: number, height: number) => void;
 }
 
-/**
- * Normalizes Next.js StaticImageData ({ src: string }) or Vite/Webpack string asset URLs
- * ensuring a valid string URL is assigned to imagePath for canvas consumption.
- */
-function resolveStaticSrc(image: any): string {
-  if (!image) return '';
-  if (typeof image === 'string') return image;
-  if (typeof image === 'object' && 'src' in image) return image.src;
-  if (typeof image === 'object' && 'default' in image) {
-    const def = image.default;
-    return typeof def === 'object' && 'src' in def ? def.src : String(def);
-  }
-  return String(image);
-}
-
 export const coloringPages: ColoringPage[] = [
+  // --- Categoría: Nosotros (public/us) ---
   {
-    id: 'couple-line-art-illustration',
+    id: 'us-01',
     title: {
-      es: 'Ilustración Romántica de Pareja',
-      en: 'Couple Romantic Line Art',
+      es: 'Nosotros — Retrato en Pareja 1',
+      en: 'Us — Couple Portrait 1',
     },
     subtitle: {
-      es: 'Trazos suaves y tiernos para compartir y colorear juntos',
-      en: 'Gentle, tender strokes to share and color together',
+      es: 'Recuerdo especial en trazos lineales para pintar juntos',
+      en: 'Special memory in line art to color together',
     },
-    category: 'Couple Art',
-    imagePath: resolveStaticSrc(coupleIllustration),
+    category: 'Nosotros',
+    imagePath: '/us/1.jpg',
   },
   {
-    id: 'couple-posing-together',
+    id: 'us-02',
     title: {
-      es: 'Abrazo & Retrato en Pareja',
-      en: 'Embrace & Portrait Together',
+      es: 'Nosotros — Momento 2',
+      en: 'Us — Moment 2',
     },
     subtitle: {
-      es: 'Captura romántica en líneas limpias y definidas',
-      en: 'Romantic capture in crisp defined outlines',
+      es: 'Cómplices en cada aventura y rincón del camino',
+      en: 'Partners in every adventure along the way',
     },
-    category: 'Portraits',
-    imagePath: resolveStaticSrc(couplePosing),
+    category: 'Nosotros',
+    imagePath: '/us/2.jpg',
   },
   {
-    id: 'couple-elevator-selfie',
+    id: 'us-03',
     title: {
-      es: 'Selfie en el Espejo del Ascensor',
-      en: 'Elevator Mirror Selfie',
+      es: 'Nosotros — Momento 3',
+      en: 'Us — Moment 3',
     },
     subtitle: {
-      es: 'Un instante espontáneo y divertido de nuestra rutina',
-      en: 'A spontaneous everyday moment shared together',
+      es: 'Nuestra historia en un retrato minimalista',
+      en: 'Our story captured in minimalist portrait lines',
     },
-    category: 'Everyday Romance',
-    imagePath: resolveStaticSrc(coupleElevator),
+    category: 'Nosotros',
+    imagePath: '/us/3.jpg',
+  },
+
+  // --- Categoría: Romántico (public/romantic) ---
+  {
+    id: 'romantic-01',
+    title: {
+      es: 'Romance & Ternura 1',
+      en: 'Romance & Tenderness 1',
+    },
+    subtitle: {
+      es: 'Abrazo íntimo con suaves líneas para colorear',
+      en: 'Intimate embrace with soft line art to color',
+    },
+    category: 'Romántico',
+    imagePath: '/romantic/1.jpg',
+  },
+  {
+    id: 'romantic-02',
+    title: {
+      es: 'Romance & Ternura 2',
+      en: 'Romance & Tenderness 2',
+    },
+    subtitle: {
+      es: 'Miradas compartidas y detalles llenos de cariño',
+      en: 'Shared glances and details filled with love',
+    },
+    category: 'Romántico',
+    imagePath: '/romantic/2.jpg',
+  },
+
+  // --- Categoría: Mandalas (public/mandalas) ---
+  {
+    id: 'mandalas-01',
+    title: {
+      es: 'Mandala de la Armonía',
+      en: 'Harmony Mandala',
+    },
+    subtitle: {
+      es: 'Geometría meditativa para desconectar y pintar en calma',
+      en: 'Meditative geometry to unwind and paint in peace',
+    },
+    category: 'Mandalas',
+    imagePath: '/mandalas/1.jpg',
+  },
+  {
+    id: 'mandalas-02',
+    title: {
+      es: 'Mandala del Vínculo',
+      en: 'Bond Mandala',
+    },
+    subtitle: {
+      es: 'Patrones simétricos y relajantes a cuatro manos',
+      en: 'Symmetrical, relaxing patterns for two',
+    },
+    category: 'Mandalas',
+    imagePath: '/mandalas/2.jpg',
   },
   {
     id: 'botanical-peonies',

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ColoringPage } from '../data/pages';
 import { Sparkles, Image as ImageIcon } from 'lucide-react';

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useState } from 'react';
 import { coloringPages, ColoringPage } from '../data/pages';
 import { ColoringCanvas, ColoringCanvasHandle } from './ColoringCanvas';
