@@ -29,16 +29,8 @@ export const ColoringStudio: React.FC<ColoringStudioProps> = ({
     canvasRef.current?.undo();
   };
 
-  const handleReset = () => {
-    if (
-      window.confirm(
-        isEs
-          ? '¿Deseas reiniciar esta lámina en blanco?'
-          : 'Do you want to reset this page to blank?'
-      )
-    ) {
-      canvasRef.current?.reset();
-    }
+  const handleClear = () => {
+    canvasRef.current?.clear();
   };
 
   const handleSave = () => {
@@ -82,7 +74,8 @@ export const ColoringStudio: React.FC<ColoringStudioProps> = ({
         <Toolbar
           canUndo={canUndo}
           onUndo={handleUndo}
-          onReset={handleReset}
+          onReset={handleClear}
+          onClear={handleClear}
           onSave={handleSave}
           lang={lang}
         />

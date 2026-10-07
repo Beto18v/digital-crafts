@@ -14,6 +14,7 @@ import { floodFill } from '../utils/floodFill';
 export interface ColoringCanvasHandle {
   undo: () => void;
   reset: () => void;
+  clear: () => void;
   saveImage: () => void;
   canUndo: boolean;
 }
@@ -46,6 +47,9 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
     const [historyLength, setHistoryLength] = useState<number>(0);
     const [paintRevision, setPaintRevision] = useState<number>(0);
 
+    // Rastreo de la última imagen cargada para evitar re-dibujados innecesarios y parpadeos
+    const loadedPageIdRef = useRef<string | null>(null);
+
     // Auto-save: Guarda automáticamente el estado actual del lienzo en localStorage
     useEffect(() => {
       if (paintRevision === 0) return;
@@ -60,7 +64,107 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
       }
     }, [paintRevision, currentPage.id]);
 
-    // Redraw and reset lineart or restore saved state from localStorage
+    /**
+     * Dibuja la imagen base original en el lienzo con object-fit: cover
+     * y recorte extra (zoom = 1.08) para eliminar líneas y márgenes blancos perimetrales.
+     */
+    const drawBaseImage = useCallback(
+      (
+        targetCtx: CanvasRenderingContext2D,
+        canvas: HTMLCanvasElement,
+        onDone?: () => void
+      ) => {
+        const hasRealImage =
+          Boolean(currentPage.imagePath) &&
+          !currentPage.imagePath.startsWith('/images/coloring-');
+
+        if (hasRealImage) {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+
+          img.onload = () => {
+            if (!canvasRef.current || loadedPageIdRef.current !== currentPage.id) {
+              return;
+            }
+            const currentCtx = canvasRef.current.getContext('2d', {
+              willReadFrequently: true,
+            });
+            if (!currentCtx) return;
+
+            // Limpieza previa con fondo blanco
+            currentCtx.clearRect(0, 0, canvas.width, canvas.height);
+            currentCtx.fillStyle = '#ffffff';
+            currentCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Factor de zoom (recorta un 8% adicional para eliminar márgenes blancos perimetrales)
+            const zoom = 1.08;
+
+            // 2. Proporciones de aspecto del canvas y de la imagen original
+            const canvasRatio = canvas.width / canvas.height;
+            const imgWidth = img.naturalWidth || img.width;
+            const imgHeight = img.naturalHeight || img.height;
+            const imgRatio = imgWidth / imgHeight;
+
+            // 3. Cálculo de sx, sy, sWidth, sHeight según si es más ancha o más alta
+            let sWidth: number;
+            let sHeight: number;
+
+            if (imgRatio > canvasRatio) {
+              // La imagen es más ancha que el canvas: recortamos los lados
+              sHeight = imgHeight / zoom;
+              sWidth = (imgHeight * canvasRatio) / zoom;
+            } else {
+              // La imagen es más alta que el canvas: recortamos arriba y abajo
+              sWidth = imgWidth / zoom;
+              sHeight = (imgWidth / canvasRatio) / zoom;
+            }
+
+            // Coordenadas origen centradas
+            const sx = (imgWidth - sWidth) / 2;
+            const sy = (imgHeight - sHeight) / 2;
+
+            // 4. Firma completa: llena exactamente el 100% del canvas a sangre
+            currentCtx.drawImage(
+              img,
+              sx,
+              sy,
+              sWidth,
+              sHeight,
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+
+            if (typeof currentPage.renderLineArt === 'function') {
+              currentPage.renderLineArt(currentCtx, canvas.width, canvas.height);
+            }
+
+            if (onDone) onDone();
+          };
+
+          img.onerror = (err) => {
+            console.warn('Failed loading imagePath on canvas, falling back', err);
+            if (typeof currentPage.renderLineArt === 'function') {
+              currentPage.renderLineArt(targetCtx, canvas.width, canvas.height);
+            }
+            if (onDone) onDone();
+          };
+
+          img.src = currentPage.imagePath;
+        } else {
+          targetCtx.fillStyle = '#ffffff';
+          targetCtx.fillRect(0, 0, canvas.width, canvas.height);
+          if (typeof currentPage.renderLineArt === 'function') {
+            currentPage.renderLineArt(targetCtx, canvas.width, canvas.height);
+          }
+          if (onDone) onDone();
+        }
+      },
+      [currentPage]
+    );
+
+    // Redraw y restauración de estado con localStorage o imagen original
     const renderBasePage = useCallback(
       (forceOriginal: boolean = false) => {
         const canvas = canvasRef.current;
@@ -71,12 +175,13 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
         canvas.width = CANVAS_WIDTH;
         canvas.height = CANVAS_HEIGHT;
 
-        // Base pure white canvas background
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+        const targetPageId = currentPage.id;
+
         const commitSnapshot = () => {
-          if (!canvasRef.current) return;
+          if (!canvasRef.current || loadedPageIdRef.current !== targetPageId) return;
           const currentCtx = canvasRef.current.getContext('2d', {
             willReadFrequently: true,
           });
@@ -92,66 +197,6 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
           if (onCanUndoChange) onCanUndoChange(false);
         };
 
-        const drawOriginalTemplate = () => {
-          const hasRealImage =
-            Boolean(currentPage.imagePath) &&
-            !currentPage.imagePath.startsWith('/images/coloring-');
-
-          if (hasRealImage) {
-            const img = new Image();
-            // Prevent canvas tainting for getImageData and flood fill reading
-            img.crossOrigin = 'anonymous';
-
-            img.onload = () => {
-              if (!canvasRef.current) return;
-              const currentCtx = canvasRef.current.getContext('2d', {
-                willReadFrequently: true,
-              });
-              if (!currentCtx) return;
-
-              currentCtx.fillStyle = '#ffffff';
-              currentCtx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-              // Calculate scaling to preserve aspect ratio centered with small margin
-              const padding = 16;
-              const maxW = CANVAS_WIDTH - padding * 2;
-              const maxH = CANVAS_HEIGHT - padding * 2;
-              const scale = Math.min(
-                maxW / img.naturalWidth,
-                maxH / img.naturalHeight
-              );
-              const drawW = Math.round(img.naturalWidth * scale);
-              const drawH = Math.round(img.naturalHeight * scale);
-              const offsetX = Math.round((CANVAS_WIDTH - drawW) / 2);
-              const offsetY = Math.round((CANVAS_HEIGHT - drawH) / 2);
-
-              currentCtx.drawImage(img, offsetX, offsetY, drawW, drawH);
-
-              if (typeof currentPage.renderLineArt === 'function') {
-                currentPage.renderLineArt(currentCtx, CANVAS_WIDTH, CANVAS_HEIGHT);
-              }
-
-              commitSnapshot();
-            };
-
-            img.onerror = (err) => {
-              console.warn('Failed loading imagePath on canvas, falling back', err);
-              if (typeof currentPage.renderLineArt === 'function') {
-                currentPage.renderLineArt(ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
-              }
-              commitSnapshot();
-            };
-
-            img.src = currentPage.imagePath;
-          } else {
-            if (typeof currentPage.renderLineArt === 'function') {
-              currentPage.renderLineArt(ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
-            }
-            commitSnapshot();
-          }
-        };
-
-        // Verifica si hay un estado guardado en localStorage para esta lámina
         const savedDataUrl = !forceOriginal
           ? localStorage.getItem(`coloring-canvas-state-${currentPage.id}`)
           : null;
@@ -159,7 +204,9 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
         if (savedDataUrl) {
           const savedImg = new Image();
           savedImg.onload = () => {
-            if (!canvasRef.current) return;
+            if (!canvasRef.current || loadedPageIdRef.current !== targetPageId) {
+              return;
+            }
             const currentCtx = canvasRef.current.getContext('2d', {
               willReadFrequently: true,
             });
@@ -177,74 +224,82 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
               'Failed to load saved state from localStorage, rendering original'
             );
             localStorage.removeItem(`coloring-canvas-state-${currentPage.id}`);
-            drawOriginalTemplate();
+            drawBaseImage(ctx, canvas, commitSnapshot);
           };
 
           savedImg.src = savedDataUrl;
         } else {
-          drawOriginalTemplate();
+          drawBaseImage(ctx, canvas, commitSnapshot);
         }
       },
-      [currentPage, onCanUndoChange]
+      [currentPage, drawBaseImage, onCanUndoChange]
     );
 
-    // Re-render / restaurar estado cuando cambia la lámina seleccionada
+    // Carga de imagen optimizada: no parpadea ni redibuja si la imagen actual no ha cambiado
     useEffect(() => {
+      if (loadedPageIdRef.current === currentPage.id) {
+        return;
+      }
+      loadedPageIdRef.current = currentPage.id;
       setPaintRevision(0);
       renderBasePage(false);
-    }, [renderBasePage]);
+    }, [currentPage.id, renderBasePage]);
 
-    // Handle canvas click / touch for flood fill
-    const executeFillAt = (clientX: number, clientY: number) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d', { willReadFrequently: true });
-      if (!ctx) return;
+    // Función que ejecuta el flood fill envuelta en useCallback
+    const executeFillAt = useCallback(
+      (clientX: number, clientY: number) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        if (!ctx) return;
 
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
 
-      const clickX = Math.floor((clientX - rect.left) * scaleX);
-      const clickY = Math.floor((clientY - rect.top) * scaleY);
+        const clickX = Math.floor((clientX - rect.left) * scaleX);
+        const clickY = Math.floor((clientY - rect.top) * scaleY);
 
-      // Save state before modification for undo
-      const preFillState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const preFillState = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-      // Execute optimized flood fill con tolerancia y muros anti-aliasing
-      const filled = floodFill(
-        ctx,
-        clickX,
-        clickY,
-        currentColor,
-        tolerance,
-        borderThreshold
-      );
+        const filled = floodFill(
+          ctx,
+          clickX,
+          clickY,
+          currentColor,
+          tolerance,
+          borderThreshold
+        );
 
-      if (filled) {
-        // Push state to undo stack
-        historyStack.current.push(preFillState);
-        if (historyStack.current.length > MAX_UNDO_STACK) {
-          historyStack.current.shift();
+        if (filled) {
+          historyStack.current.push(preFillState);
+          if (historyStack.current.length > MAX_UNDO_STACK) {
+            historyStack.current.shift();
+          }
+          setHistoryLength(historyStack.current.length);
+          if (onCanUndoChange) onCanUndoChange(true);
+          setPaintRevision((prev) => prev + 1);
         }
-        setHistoryLength(historyStack.current.length);
-        if (onCanUndoChange) onCanUndoChange(true);
-        // Disparar auto-save en localStorage
-        setPaintRevision((prev) => prev + 1);
-      }
-    };
+      },
+      [currentColor, tolerance, borderThreshold, onCanUndoChange]
+    );
 
-    const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-      executeFillAt(e.clientX, e.clientY);
-    };
+    const handleCanvasClick = useCallback(
+      (e: React.MouseEvent<HTMLCanvasElement>) => {
+        executeFillAt(e.clientX, e.clientY);
+      },
+      [executeFillAt]
+    );
 
-    const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
-      if (e.touches.length > 0) {
-        executeFillAt(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    };
+    const handleTouchStart = useCallback(
+      (e: React.TouchEvent<HTMLCanvasElement>) => {
+        if (e.touches.length > 0) {
+          executeFillAt(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      },
+      [executeFillAt]
+    );
 
-    // Undo action
     const handleUndo = useCallback(() => {
       const canvas = canvasRef.current;
       if (!canvas || historyStack.current.length <= 1) return;
@@ -258,59 +313,90 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
         if (onCanUndoChange) {
           onCanUndoChange(historyStack.current.length > 1);
         }
-        // Actualiza el auto-save con el estado revertido
         setPaintRevision((prev) => prev + 1);
       }
     }, [onCanUndoChange]);
 
-    // Reset action: limpia el localStorage y re-renderiza la plantilla original
-    const handleReset = useCallback(() => {
+    /**
+     * Limpiar (Clear / Reset) ejecutando los 4 pasos obligatorios en orden:
+     * 1. Borrar el LocalStorage específico de esta imagen
+     * 2. Limpiar el Historial de Deshacer (setHistory([]) / vaciar pila)
+     * 3. Limpiar el Lienzo (ctx.clearRect)
+     * 4. Redibujar la Imagen Base original con matemática de recorte/zoom
+     */
+    const handleClear = useCallback(() => {
+      // 1. Borrar el LocalStorage
       try {
         localStorage.removeItem(`coloring-canvas-state-${currentPage.id}`);
       } catch (err) {
         console.warn('Error clearing localStorage on reset:', err);
       }
       setPaintRevision(0);
-      renderBasePage(true);
-    }, [currentPage.id, renderBasePage]);
 
-    // Save as high-res PNG
+      // 2. Limpiar el Historial de Deshacer
+      historyStack.current = [];
+      setHistoryLength(0);
+      if (onCanUndoChange) {
+        onCanUndoChange(false);
+      }
+
+      // 3. Limpiar el Lienzo
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 4. Redibujar la Imagen Base con matemática de recorte/zoom y restablecer el snapshot inicial
+      drawBaseImage(ctx, canvas, () => {
+        if (!canvasRef.current) return;
+        const currentCtx = canvasRef.current.getContext('2d', {
+          willReadFrequently: true,
+        });
+        if (!currentCtx) return;
+
+        const baseState = currentCtx.getImageData(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+        historyStack.current = [baseState];
+        setHistoryLength(1);
+        if (onCanUndoChange) onCanUndoChange(false);
+      });
+    }, [currentPage.id, drawBaseImage, onCanUndoChange]);
+
     const handleSave = useCallback(() => {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      // Create download anchor
       const link = document.createElement('a');
       link.download = `Our-Craft-${currentPage.id}-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     }, [currentPage.id]);
 
-    // Expose handle methods to parent component
     useImperativeHandle(
       ref,
       () => ({
         undo: handleUndo,
-        reset: handleReset,
+        reset: handleClear,
+        clear: handleClear,
         saveImage: handleSave,
         canUndo: historyLength > 1,
       }),
-      [handleUndo, handleReset, handleSave, historyLength]
+      [handleUndo, handleClear, handleSave, historyLength]
     );
 
     return (
-      <div className="relative w-full aspect-square max-w-[620px] mx-auto rounded-3xl bg-white shadow-[0_12px_45px_rgba(40,25,25,0.08)] dark:shadow-[0_16px_50px_rgba(0,0,0,0.5)] border border-stone-200/80 dark:border-white/10 p-2 sm:p-4 overflow-hidden flex items-center justify-center select-none">
-        {/* Subtle watercolor paper grain texture background */}
-        <div
-          className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#a8a29e_1px,transparent_1px)] [background-size:12px_12px]"
-          aria-hidden="true"
-        />
-
+      <div className="relative w-full aspect-square max-w-[620px] mx-auto rounded-3xl bg-white shadow-[0_12px_45px_rgba(40,25,25,0.08)] dark:shadow-[0_16px_50px_rgba(0,0,0,0.5)] border border-stone-200/80 dark:border-white/10 p-0 overflow-hidden flex items-center justify-center select-none">
         <canvas
           ref={canvasRef}
           onClick={handleCanvasClick}
           onTouchStart={handleTouchStart}
-          className="w-full h-full object-contain rounded-2xl cursor-crosshair active:scale-[0.998] transition-transform touch-none"
+          className="w-full h-full block rounded-3xl cursor-crosshair active:scale-[0.999] transition-transform touch-none"
           style={{ imageRendering: 'auto' }}
           aria-label={currentPage.title.es}
           role="img"

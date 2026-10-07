@@ -6,7 +6,8 @@ import { Undo2, RotateCcw, Download, Sparkles, PaintBucket } from 'lucide-react'
 interface ToolbarProps {
   canUndo: boolean;
   onUndo: () => void;
-  onReset: () => void;
+  onReset?: () => void;
+  onClear?: () => void;
   onSave: () => void;
   lang: 'es' | 'en';
 }
@@ -15,10 +16,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   canUndo,
   onUndo,
   onReset,
+  onClear,
   onSave,
   lang,
 }) => {
   const isEs = lang === 'es';
+  const handleClearAction = onClear || onReset;
 
   return (
     <div className="flex items-center justify-between gap-3 p-2.5 sm:p-3 rounded-2xl bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl border border-stone-200/80 dark:border-white/10 shadow-xs">
@@ -46,15 +49,15 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           <span>{isEs ? 'Deshacer' : 'Undo'}</span>
         </button>
 
-        {/* Reset Button */}
+        {/* Reset / Clear Button */}
         <button
           type="button"
-          onClick={onReset}
-          title={isEs ? 'Limpiar lienzo en blanco' : 'Reset canvas to blank'}
+          onClick={handleClearAction}
+          title={isEs ? 'Limpiar lienzo en blanco' : 'Clear canvas'}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-stone-600 dark:text-stone-300 hover:text-rose-600 dark:hover:text-rose-400 bg-stone-100 dark:bg-stone-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer active:scale-95"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          <span>{isEs ? 'Limpiar' : 'Reset'}</span>
+          <span>{isEs ? 'Limpiar' : 'Clear'}</span>
         </button>
 
         {/* Save / Export PNG Button */}
