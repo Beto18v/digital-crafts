@@ -47,18 +47,27 @@ export const GallerySelector: React.FC<GallerySelectorProps> = ({
               }`}
             >
               {/* Mini canvas preview container */}
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-white dark:bg-stone-900/90 border border-stone-200/70 dark:border-stone-700/60 overflow-hidden flex items-center justify-center p-2 mb-2 relative">
-                <div className="text-center">
-                  <span className="text-xs font-mono font-bold text-stone-400 dark:text-stone-500 block mb-1">
-                    #{idx + 1}
-                  </span>
-                  <span className="text-[10px] text-stone-600 dark:text-stone-300 font-medium line-clamp-2 leading-tight">
-                    {page.title[lang]}
-                  </span>
-                </div>
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-white dark:bg-stone-900/90 border border-stone-200/70 dark:border-stone-700/60 overflow-hidden flex items-center justify-center p-1.5 mb-2 relative">
+                {page.imagePath && !page.imagePath.startsWith('/images/coloring-') ? (
+                  <img
+                    src={page.imagePath}
+                    alt={page.title[lang]}
+                    className="w-full h-full object-contain pointer-events-none rounded-lg"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="text-center p-1">
+                    <span className="text-xs font-mono font-bold text-stone-400 dark:text-stone-500 block mb-1">
+                      #{idx + 1}
+                    </span>
+                    <span className="text-[10px] text-stone-600 dark:text-stone-300 font-medium line-clamp-2 leading-tight">
+                      {page.title[lang]}
+                    </span>
+                  </div>
+                )}
 
                 {isSelected && (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 shadow-xs" />
                 )}
               </div>
 

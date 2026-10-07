@@ -1,9 +1,9 @@
 /**
  * Optimized Flood Fill Algorithm using BFS and Typed Arrays
- * Supports tolerance for anti-aliased line art outlines.
+ * Supports color tolerance and line-art border threshold for anti-aliasing edges.
  */
 
-interface RGB {
+export interface RGB {
   r: number;
   g: number;
   b: number;
@@ -31,9 +31,9 @@ export function hexToRgb(hex: string): RGB {
 }
 
 /**
- * Checks if two colors match within a given tolerance threshold (0 - 255)
+ * Calculates Euclidean color distance between two pixels in RGBA space.
  */
-function colorMatch(
+export function colorDistance(
   r1: number,
   g1: number,
   b1: number,
@@ -41,43 +41,60 @@ function colorMatch(
   r2: number,
   g2: number,
   b2: number,
-  a2: number,
-  tolerance: number
-): boolean {
-  return (
-    Math.abs(r1 - r2) <= tolerance &&
-    Math.abs(g1 - g2) <= tolerance &&
-    Math.abs(b1 - b2) <= tolerance &&
-    Math.abs(a1 - a2) <= tolerance
-  );
+  a2: number
+): number {
+  const dr = r1 - r2;
+  const dg = g1 - g2;
+  const db = b1 - b2;
+  const da = a1 - a2;
+  return Math.sqrt(dr * dr + dg * dg + db * db + da * da);
 }
 
 /**
- * Determines if a pixel is considered a "black line art border"
- * to prevent leaking through dark edges.
+ * Determines if a pixel is considered a "line-art border / wall".
+ * Treats dark and gray anti-aliased edge pixels as solid boundaries to prevent color bleeding.
+ *
+ * @param r Red component (0-255)
+ * @param g Green component (0-255)
+ * @param b Blue component (0-255)
+ * @param a Alpha component (0-255)
+ * @param borderThreshold Brightness threshold below which pixels are treated as walls (default: 130)
  */
-function isLineArtBorder(r: number, g: number, b: number, a: number): boolean {
+export function isLineArtBorder(
+  r: number,
+  g: number,
+  b: number,
+  a: number,
+  borderThreshold: number = 130
+): boolean {
   if (a < 50) return false;
-  // If brightness is low, it's considered an outline border
+  // Perceptual brightness formula (ITU-R BT.601)
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  return brightness < 80;
+  // Neutral gray/black anti-aliased edge detection (low saturation or very dark)
+  const colorSpread = Math.max(r, g, b) - Math.min(r, g, b);
+  const isNeutral = colorSpread < 50;
+
+  return brightness <= borderThreshold && (isNeutral || brightness < 60);
 }
 
 /**
- * Executes flood fill on an ImageData buffer
- * @param ctx 2D Canvas context
+ * Executes flood fill on a 2D Canvas context with anti-aliasing wall protection.
+ *
+ * @param ctx 2D Canvas rendering context
  * @param startX Starting X coordinate
  * @param startY Starting Y coordinate
- * @param fillColor Hex fill color (e.g. '#f43f5e')
- * @param tolerance Color matching tolerance (default: 32)
- * @returns boolean true if canvas was modified
+ * @param fillColorHex Hex fill color (e.g. '#f43f5e')
+ * @param tolerance Color matching tolerance for region expansion (default: 36)
+ * @param borderThreshold Brightness threshold where dark/gray pixels become impenetrable walls (default: 130)
+ * @returns boolean true if the canvas was modified
  */
 export function floodFill(
   ctx: CanvasRenderingContext2D,
   startX: number,
   startY: number,
   fillColorHex: string,
-  tolerance: number = 36
+  tolerance: number = 36,
+  borderThreshold: number = 130
 ): boolean {
   const width = ctx.canvas.width;
   const height = ctx.canvas.height;
@@ -96,14 +113,14 @@ export function floodFill(
   const targetB = data[startIndex + 2];
   const targetA = data[startIndex + 3];
 
-  // If clicked directly on a lineart border, do not fill
-  if (isLineArtBorder(targetR, targetG, targetB, targetA)) {
+  // If clicked directly on a line-art border (dark or gray line), do not paint
+  if (isLineArtBorder(targetR, targetG, targetB, targetA, borderThreshold)) {
     return false;
   }
 
-  // If target color is already identical to fill color, skip
+  // If target pixel is already the desired fill color, skip
   if (
-    colorMatch(
+    colorDistance(
       targetR,
       targetG,
       targetB,
@@ -111,21 +128,19 @@ export function floodFill(
       fillRgb.r,
       fillRgb.g,
       fillRgb.b,
-      fillRgb.a,
-      5
-    )
+      fillRgb.a
+    ) <= 5
   ) {
     return false;
   }
 
-  // Pre-calculate 32-bit fill representation for speed (Little Endian: ABGR)
+  // Pre-calculate 32-bit little-endian color (ABGR)
   const fillValue =
     (fillRgb.a << 24) | (fillRgb.b << 16) | (fillRgb.g << 8) | fillRgb.r;
-
   const data32 = new Uint32Array(data.buffer);
   const visited = new Uint8Array(width * height);
 
-  // Queue allocation (circular or preallocated index pointer)
+  // Queue allocation
   const queueX = new Int32Array(width * height);
   const queueY = new Int32Array(width * height);
   let head = 0;
@@ -134,7 +149,6 @@ export function floodFill(
   queueX[tail] = startX;
   queueY[tail] = startY;
   tail++;
-
   visited[startY * width + startX] = 1;
 
   while (head < tail) {
@@ -143,17 +157,8 @@ export function floodFill(
     head++;
 
     const idx = y * width + x;
-    const pixelOffset = idx * 4;
-
-    const curR = data[pixelOffset];
-    const curG = data[pixelOffset + 1];
-    const curB = data[pixelOffset + 2];
-    const curA = data[pixelOffset + 3];
-
-    // Paint pixel in 32-bit buffer
     data32[idx] = fillValue;
 
-    // Check 4-connected neighbors
     const neighbors = [
       [x + 1, y],
       [x - 1, y],
@@ -175,34 +180,34 @@ export function floodFill(
           const nb = data[nOffset + 2];
           const na = data[nOffset + 3];
 
-          // Stop if neighbor hits a dark line art border
-          if (!isLineArtBorder(nr, ng, nb, na)) {
-            // Check if neighbor matches initial clicked color within tolerance
-            if (
-              colorMatch(
-                nr,
-                ng,
-                nb,
-                na,
-                targetR,
-                targetG,
-                targetB,
-                targetA,
-                tolerance
-              )
-            ) {
-              visited[nIdx] = 1;
-              queueX[tail] = nx;
-              queueY[tail] = ny;
-              tail++;
-            }
+          // Treat gray or dark pixels as walls: stop expansion immediately
+          if (isLineArtBorder(nr, ng, nb, na, borderThreshold)) {
+            continue;
+          }
+
+          // Check if neighbor matches clicked target color within tolerance
+          if (
+            colorDistance(
+              nr,
+              ng,
+              nb,
+              na,
+              targetR,
+              targetG,
+              targetB,
+              targetA
+            ) <= tolerance
+          ) {
+            visited[nIdx] = 1;
+            queueX[tail] = nx;
+            queueY[tail] = ny;
+            tail++;
           }
         }
       }
     }
   }
 
-  // Put updated pixel data back to canvas
   ctx.putImageData(imageData, 0, 0);
   return true;
 }

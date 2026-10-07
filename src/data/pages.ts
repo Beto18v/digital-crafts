@@ -1,3 +1,7 @@
+import coupleIllustration from '@/Couple_line_art_illustration_20261007114013.jpg';
+import couplePosing from '@/Couple_posing_together_line_art_20261007114015.jpg';
+import coupleElevator from '@/Couple_taking_elevator_mirror_se…_20261007114017.jpg';
+
 export interface ColoringPage {
   id: string;
   title: {
@@ -10,10 +14,64 @@ export interface ColoringPage {
   };
   category: string;
   imagePath: string;
-  renderLineArt: (ctx: CanvasRenderingContext2D, width: number, height: number) => void;
+  renderLineArt?: (ctx: CanvasRenderingContext2D, width: number, height: number) => void;
+}
+
+/**
+ * Normalizes Next.js StaticImageData ({ src: string }) or Vite/Webpack string asset URLs
+ * ensuring a valid string URL is assigned to imagePath for canvas consumption.
+ */
+function resolveStaticSrc(image: any): string {
+  if (!image) return '';
+  if (typeof image === 'string') return image;
+  if (typeof image === 'object' && 'src' in image) return image.src;
+  if (typeof image === 'object' && 'default' in image) {
+    const def = image.default;
+    return typeof def === 'object' && 'src' in def ? def.src : String(def);
+  }
+  return String(image);
 }
 
 export const coloringPages: ColoringPage[] = [
+  {
+    id: 'couple-line-art-illustration',
+    title: {
+      es: 'Ilustración Romántica de Pareja',
+      en: 'Couple Romantic Line Art',
+    },
+    subtitle: {
+      es: 'Trazos suaves y tiernos para compartir y colorear juntos',
+      en: 'Gentle, tender strokes to share and color together',
+    },
+    category: 'Couple Art',
+    imagePath: resolveStaticSrc(coupleIllustration),
+  },
+  {
+    id: 'couple-posing-together',
+    title: {
+      es: 'Abrazo & Retrato en Pareja',
+      en: 'Embrace & Portrait Together',
+    },
+    subtitle: {
+      es: 'Captura romántica en líneas limpias y definidas',
+      en: 'Romantic capture in crisp defined outlines',
+    },
+    category: 'Portraits',
+    imagePath: resolveStaticSrc(couplePosing),
+  },
+  {
+    id: 'couple-elevator-selfie',
+    title: {
+      es: 'Selfie en el Espejo del Ascensor',
+      en: 'Elevator Mirror Selfie',
+    },
+    subtitle: {
+      es: 'Un instante espontáneo y divertido de nuestra rutina',
+      en: 'A spontaneous everyday moment shared together',
+    },
+    category: 'Everyday Romance',
+    imagePath: resolveStaticSrc(coupleElevator),
+  },
   {
     id: 'botanical-peonies',
     title: { es: 'Peonías & Hojas Silvestres', en: 'Wild Peonies & Foliage' },
