@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Compass, ArrowDown, BookOpen } from 'lucide-react';
+import { Compass, ArrowDown } from 'lucide-react';
 import { Language } from '../types';
 
 export interface HeroTranslation {
@@ -226,14 +226,6 @@ export const Hero: React.FC<HeroProps> = ({
             <span>{t.buttons.explore}</span>
             <ArrowDown className="w-3.5 h-3.5 text-stone-400 dark:text-stone-600 group-hover:translate-y-0.5 transition-transform" />
           </button>
-
-          <a
-            href="#story"
-            className="px-5 py-3.5 rounded-full bg-white/80 dark:bg-stone-900/80 hover:bg-white dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white border border-stone-200/90 dark:border-white/10 shadow-2xs hover:shadow-xs transition-all font-medium flex items-center gap-2 backdrop-blur-xs"
-          >
-            <BookOpen className="w-4 h-4 text-stone-400" />
-            <span>{t.buttons.story}</span>
-          </a>
         </motion.div>
       </div>
     </section>
