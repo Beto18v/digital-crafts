@@ -123,7 +123,7 @@ export const Hero: React.FC<HeroProps> = ({
   };
 
   return (
-    <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-24 overflow-hidden">
+    <section className="relative min-h-[100dvh] w-full flex flex-col justify-center items-center overflow-hidden px-4 md:px-8 py-16 sm:py-20">
       {/* Animated ambient mesh gradient aura */}
       <div className="absolute inset-0 pointer-events-none -z-10 flex items-center justify-center overflow-hidden">
         <motion.div
@@ -154,7 +154,7 @@ export const Hero: React.FC<HeroProps> = ({
         />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div className="w-full max-w-4xl mx-auto px-4 md:px-8 text-center relative z-10 flex flex-col items-center justify-center">
         {/* Editorial Sub-badge */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
