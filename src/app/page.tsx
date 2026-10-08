@@ -9,7 +9,7 @@ import { ProjectModal } from '../components/ProjectModal';
 import { ColoringStudio } from '../components/ColoringStudio';
 import { projects } from '../data/projects';
 import { Language, ProjectCardInfo } from '../types';
-import { Heart, Sparkles, Moon, Palette, Layers, Compass } from 'lucide-react';
+import { Heart, Sparkles, Coffee, Feather, Moon, Palette, Layers, Compass } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Page() {
@@ -110,14 +110,14 @@ export default function Page() {
   return (
     <div className="relative min-h-screen bg-[#faf7f2] dark:bg-[#121013] text-stone-800 dark:text-stone-100 antialiased selection:bg-rose-200 dark:selection:bg-rose-900 selection:text-stone-900 dark:selection:text-rose-100 overflow-x-clip transition-colors duration-300">
       {/* Discreet Quiet Top Brand Bar */}
-      <div className="absolute top-0 inset-x-0 z-20 flex flex-wrap items-center justify-between gap-3 px-4 sm:px-10 py-4 sm:py-5 pointer-events-none">
-        <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
+      <div className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-6 sm:px-10 py-5 pointer-events-none">
+        <div className="flex items-center gap-3 pointer-events-auto">
           <button
             type="button"
             onClick={() => setViewMode('hub')}
-            className="flex items-center gap-1.5 sm:gap-2 group text-left cursor-pointer"
+            className="flex items-center gap-2 group text-left cursor-pointer"
           >
-            <span className="font-serif text-base sm:text-lg font-medium tracking-tight text-stone-900 dark:text-stone-100 group-hover:text-rose-950 dark:group-hover:text-rose-300 transition-colors">
+            <span className="font-serif text-lg font-medium tracking-tight text-stone-900 dark:text-stone-100 group-hover:text-rose-950 dark:group-hover:text-rose-300 transition-colors">
               Our Digital Crafts
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
@@ -125,11 +125,11 @@ export default function Page() {
         </div>
 
         {/* View Switcher Pills */}
-        <div className="pointer-events-auto flex items-center gap-1 p-1 rounded-full bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border border-stone-200/80 dark:border-white/10 shadow-2xs">
+        <div className="pointer-events-auto flex items-center gap-1.5 p-1 rounded-full bg-white/70 dark:bg-stone-900/80 backdrop-blur-md border border-stone-200/80 dark:border-white/10 shadow-2xs">
           <button
             type="button"
             onClick={() => setViewMode('hub')}
-            className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-xs font-medium transition-all ${
+            className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-all ${
               viewMode === 'hub'
                 ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 shadow-2xs'
                 : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
@@ -141,14 +141,14 @@ export default function Page() {
           <button
             type="button"
             onClick={() => setViewMode('coloring')}
-            className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-xs font-medium transition-all ${
+            className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-all ${
               viewMode === 'coloring'
                 ? 'bg-rose-600 text-white shadow-2xs'
                 : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
             }`}
           >
             <Palette className="w-3.5 h-3.5" />
-            <span>{isEs ? 'Lienzo' : 'Canvas'}</span>
+            <span>{isEs ? 'Lienzo para Colorear' : 'Coloring Canvas'}</span>
           </button>
         </div>
       </div>
@@ -197,6 +197,74 @@ export default function Page() {
               }}
               isOnlyFavorites={onlyFavorites}
             />
+
+            {/* Intimate Story & Couple Manifesto */}
+            <section
+              id="story"
+              className="bg-white/70 dark:bg-stone-900/40 backdrop-blur-md border-t border-stone-200/70 dark:border-white/10 py-16 sm:py-24"
+            >
+              <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center max-w-2xl mx-auto mb-14">
+                  <span className="text-xs font-mono uppercase tracking-widest text-stone-400 dark:text-stone-500">
+                    {isEs ? 'Nuestro Espacio Compartido' : 'Our Shared Space'}
+                  </span>
+                  <h2 className="font-serif text-3xl sm:text-4xl text-stone-900 dark:text-stone-100 mt-2 tracking-tight">
+                    {isEs
+                      ? 'Pequeñas cosas hechas con mucho amor'
+                      : 'Little things crafted with deep love'}
+                  </h2>
+                  <p className="text-sm text-stone-600 dark:text-stone-400 mt-3 leading-relaxed [text-wrap:balance]">
+                    {isEs
+                      ? 'Un rincón tranquilo, libre de notificaciones y algoritmos, diseñado para disfrutar del tiempo de calidad que nos dedicamos.'
+                      : 'A serene corner, free from feeds and notifications, dedicated exclusively to the quality time we share.'}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                  <div className="p-7 rounded-3xl bg-[#faf7f2] dark:bg-[#1a171c] border border-stone-200/80 dark:border-white/10 shadow-2xs">
+                    <div className="w-10 h-10 rounded-2xl bg-rose-100 dark:bg-rose-950/70 flex items-center justify-center text-rose-600 dark:text-rose-300 mb-4">
+                      <Coffee className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-serif text-xl text-stone-900 dark:text-stone-100 mb-2">
+                      {isEs ? 'Pausa & Calma' : 'Quiet Rituals'}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                      {isEs
+                        ? 'Preparar una cena sin prisas, descorchar un vino y disfrutar de cocinar el uno con el otro.'
+                        : 'Cooking unhurried dinners, opening wine, and delighting in making a meal hand in hand.'}
+                    </p>
+                  </div>
+
+                  <div className="p-7 rounded-3xl bg-[#faf7f2] dark:bg-[#1a171c] border border-stone-200/80 dark:border-white/10 shadow-2xs">
+                    <div className="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950/70 flex items-center justify-center text-amber-700 dark:text-amber-300 mb-4">
+                      <Feather className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-serif text-xl text-stone-900 dark:text-stone-100 mb-2">
+                      {isEs ? 'Creatividad Juntos' : 'Shared Art'}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                      {isEs
+                        ? 'Lienzos para pintar acuarelas y notas espontáneas que nos sacan una sonrisa en cualquier momento.'
+                        : 'Watercolors to paint in sync and spontaneous notes that spark a warm smile anytime.'}
+                    </p>
+                  </div>
+
+                  <div className="p-7 rounded-3xl bg-[#faf7f2] dark:bg-[#1a171c] border border-stone-200/80 dark:border-white/10 shadow-2xs">
+                    <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/70 flex items-center justify-center text-emerald-700 dark:text-emerald-300 mb-4">
+                      <Heart className="w-5 h-5 fill-emerald-500/50" />
+                    </div>
+                    <h3 className="font-serif text-xl text-stone-900 dark:text-stone-100 mb-2">
+                      {isEs ? 'Nuestros Recuerdos' : 'Our Memories'}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
+                      {isEs
+                        ? 'Un archivo vivo de viajes, canciones y fechas que son solo nuestras y de nadie más.'
+                        : 'A living archive of adventures, melodies, and dates that belong uniquely to us.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
           </>
         ) : (
           /* Interactive Coloring Studio */

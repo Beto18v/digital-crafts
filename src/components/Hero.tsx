@@ -17,6 +17,7 @@ export interface HeroTranslation {
   subtitle: string;
   buttons: {
     explore: string;
+    story: string;
   };
   filters: {
     all: string;
@@ -43,6 +44,7 @@ export const HERO_TRANSLATIONS: Record<Language, HeroTranslation> = {
       'Un universo íntimo de experiencias interactivas concebidas para alimentar la complicidad: recetas gastronómicas para cocinar de noche, lienzos relajantes y mapas de recuerdos compartidos.',
     buttons: {
       explore: 'Explorar el Bento Grid',
+      story: 'Historia del Proyecto',
     },
     filters: {
       all: 'Todos',
@@ -67,6 +69,7 @@ export const HERO_TRANSLATIONS: Record<Language, HeroTranslation> = {
       'An intimate universe of interactive experiences designed to nurture connection: late-night cooking recipes, relaxing canvases, and maps of shared memories.',
     buttons: {
       explore: 'Explore the Bento Grid',
+      story: 'Project History',
     },
     filters: {
       all: 'All',
@@ -217,12 +220,20 @@ export const Hero: React.FC<HeroProps> = ({
           <button
             type="button"
             onClick={onExploreClick}
-            className="group relative px-6 py-3.5 rounded-full bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 font-medium hover:bg-stone-800 dark:hover:bg-white transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center gap-2.5 overflow-hidden cursor-pointer"
+            className="group relative px-6 py-3.5 rounded-full bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 font-medium hover:bg-stone-800 dark:hover:bg-white transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center gap-2.5 overflow-hidden"
           >
             <Compass className="w-4 h-4 text-rose-300 dark:text-rose-600 group-hover:rotate-45 transition-transform duration-300" />
             <span>{t.buttons.explore}</span>
             <ArrowDown className="w-3.5 h-3.5 text-stone-400 dark:text-stone-600 group-hover:translate-y-0.5 transition-transform" />
           </button>
+
+          <a
+            href="#story"
+            className="px-5 py-3.5 rounded-full bg-white/80 dark:bg-stone-900/80 hover:bg-white dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white border border-stone-200/90 dark:border-white/10 shadow-2xs hover:shadow-xs transition-all font-medium flex items-center gap-2 backdrop-blur-xs"
+          >
+            <BookOpen className="w-4 h-4 text-stone-400" />
+            <span>{t.buttons.story}</span>
+          </a>
         </motion.div>
       </div>
     </section>

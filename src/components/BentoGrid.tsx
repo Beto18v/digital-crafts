@@ -55,21 +55,21 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
 
         {/* Filter Navigation Tabs */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex p-1 bg-stone-200/60 dark:bg-stone-800 rounded-2xl text-xs font-medium text-stone-600 dark:text-stone-300">
+          <div className="inline-flex p-1 bg-stone-200/60 rounded-2xl text-xs font-medium text-stone-600">
             {[
               { id: 'all', es: 'Todos', en: 'All' },
-              { id: 'live', es: 'Disponibles', en: 'Available' },
-              { id: 'cooking', es: 'Cocina & Citas', en: 'Cooking & Dates' },
-              { id: 'art', es: 'Arte & Calma', en: 'Art & Calm' },
+              { id: 'live', es: 'Disponibles', en: 'Live Now' },
+              { id: 'cooking', es: 'Cocina & Citas', en: 'Culinary' },
+              { id: 'art', es: 'Arte & Calma', en: 'Art' },
             ].map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => onFilterChange(tab.id)}
-                className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 ${
                   activeFilter === tab.id && !isOnlyFavorites
-                    ? 'bg-white dark:bg-stone-700 text-stone-950 dark:text-white font-semibold shadow-2xs'
-                    : 'text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white'
+                    ? 'bg-white text-stone-950 font-semibold shadow-2xs'
+                    : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
                 {tab[lang]}

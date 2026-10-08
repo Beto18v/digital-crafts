@@ -329,16 +329,10 @@ export const BentoCard: React.FC<BentoCardProps> = ({
               <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
             </button>
           ) : (
-            <button
-              type="button"
-              disabled
-              tabIndex={-1}
-              aria-disabled="true"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-stone-400 dark:text-stone-500 bg-stone-100/90 dark:bg-stone-800/60 border border-stone-200/60 dark:border-white/5 opacity-50 pointer-events-none select-none cursor-not-allowed shadow-none"
-            >
-              <Lock className="w-3.5 h-3.5 text-stone-400 dark:text-stone-500" />
-              <span>{isEs ? 'Próximamente' : 'Coming Soon'}</span>
-            </button>
+            <div className="inline-flex items-center gap-1.5 text-xs text-stone-400 dark:text-stone-500 font-medium select-none">
+              <Lock className="w-3.5 h-3.5" />
+              <span>{isEs ? 'En Construcción' : 'Under Construction'}</span>
+            </div>
           )}
         </div>
       </div>
