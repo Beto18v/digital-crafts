@@ -10,12 +10,45 @@ import {
   LayoutGrid,
   Heart,
   Globe,
-  Sparkles,
   ArrowUp,
   Sun,
   Moon,
 } from 'lucide-react';
 import { Language } from '../types';
+
+/**
+ * Textos centralizados de la barra de navegación flotante.
+ */
+const TEXTOS = {
+  inicio: {
+    tooltip: 'Inicio',
+    ariaLabel: 'Ir al inicio de nuestro espacio',
+  },
+  rincones: {
+    tooltip: 'Nuestros rincones',
+    ariaLabel: 'Explorar nuestros rincones',
+  },
+  corazon: {
+    tooltip: 'Un latido con amor',
+    ariaLabel: 'Enviar un latido de amor',
+  },
+  temaClaro: {
+    tooltip: 'Luz de velas (Modo claro)',
+    ariaLabel: 'Cambiar a modo claro con luz de velas',
+  },
+  temaOscuro: {
+    tooltip: 'Noche estrellada (Modo oscuro)',
+    ariaLabel: 'Cambiar a modo noche estrellada',
+  },
+  volverArriba: {
+    tooltip: 'Volver arriba',
+    ariaLabel: 'Subir suavemente al inicio',
+  },
+  idioma: {
+    tooltip: 'Idioma',
+    ariaLabel: 'Cambiar idioma',
+  },
+};
 
 interface FloatingDockProps {
   lang: Language;
@@ -109,7 +142,7 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
         whileTap={{ scale: 0.88 }}
         style={{ x: springX, y: springY }}
         aria-label={ariaLabel}
-        className={`relative w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
+        className={`relative w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 cursor-pointer ${
           isSpecialHeart
             ? 'text-rose-600 dark:text-rose-400 bg-rose-50/70 dark:bg-rose-950/40 hover:bg-rose-100/80 dark:hover:bg-rose-900/50 active:bg-rose-200/80 shadow-xs'
             : 'text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-stone-100/70 dark:hover:bg-white/10 active:bg-stone-200/60'
@@ -149,12 +182,10 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
   isDarkMode,
   onToggleTheme,
 }) => {
-  const isEs = lang === 'es';
-
   return (
     <nav
       role="navigation"
-      aria-label="Floating Dynamic Dock"
+      aria-label="Barra de navegación de nuestro espacio"
       className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto"
     >
       <motion.div
@@ -163,47 +194,47 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
         transition={{ type: 'spring', stiffness: 240, damping: 22, delay: 0.15 }}
         className="flex items-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-white/60 dark:bg-stone-900/70 backdrop-blur-2xl border border-white/60 dark:border-white/15 shadow-[0_12px_45px_rgba(40,25,25,0.1)] dark:shadow-[0_16px_50px_rgba(0,0,0,0.6)] ring-1 ring-stone-900/5 dark:ring-white/10 transition-colors duration-300"
       >
-        {/* 1. Inicio (Top) */}
+        {/* 1. Inicio */}
         <MagneticButton
           onClick={onScrollToTop}
-          tooltip={isEs ? 'Inicio' : 'Home'}
-          ariaLabel={isEs ? 'Ir al inicio' : 'Go to top'}
+          tooltip={TEXTOS.inicio.tooltip}
+          ariaLabel={TEXTOS.inicio.ariaLabel}
         >
           <Home className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
         </MagneticButton>
 
-        {/* 2. Bento Grid Explorer */}
+        {/* 2. Nuestros Rincones */}
         <MagneticButton
           onClick={onScrollToBento}
-          tooltip={isEs ? 'Manualidades' : 'Our Crafts'}
-          ariaLabel={isEs ? 'Explorar manualidades' : 'Explore crafts'}
+          tooltip={TEXTOS.rincones.tooltip}
+          ariaLabel={TEXTOS.rincones.ariaLabel}
         >
           <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
         </MagneticButton>
 
-        {/* Subtle romantic divider */}
+        {/* Separador romántico */}
         <div className="h-5 w-px bg-stone-300/60 dark:bg-stone-700/60 mx-0.5" aria-hidden="true" />
 
-        {/* 3. Special Heart Button */}
+        {/* 3. Botón de latido con corazón */}
         <MagneticButton
           onClick={() => {
             if (onLoveSparkle) onLoveSparkle();
           }}
-          tooltip={isEs ? 'Un abrazo a la distancia' : 'A gentle love note'}
-          ariaLabel={isEs ? 'Enviar latido con amor' : 'Send warm love heartbeat'}
+          tooltip={TEXTOS.corazon.tooltip}
+          ariaLabel={TEXTOS.corazon.ariaLabel}
           isSpecialHeart={true}
         >
           <Heart className="w-4 h-4 sm:w-5 sm:h-5 fill-rose-500 text-rose-500 stroke-[1.8]" />
         </MagneticButton>
 
-        {/* Subtle romantic divider */}
+        {/* Separador romántico */}
         <div className="h-5 w-px bg-stone-300/60 dark:bg-stone-700/60 mx-0.5" aria-hidden="true" />
 
-        {/* 4. Selector de Idioma (ES / EN) */}
+        {/* 4. Selector de Idioma */}
         <MagneticButton
           onClick={onToggleLang}
-          tooltip={isEs ? 'Switch to English' : 'Cambiar a Español'}
-          ariaLabel={isEs ? 'Cambiar a inglés' : 'Switch to Spanish'}
+          tooltip={TEXTOS.idioma.tooltip}
+          ariaLabel={TEXTOS.idioma.ariaLabel}
         >
           <div className="flex items-center gap-1 font-mono text-xs font-bold tracking-tight text-stone-700 dark:text-stone-200">
             <Globe className="w-3.5 h-3.5 text-stone-400 dark:text-stone-400" />
@@ -211,19 +242,11 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
           </div>
         </MagneticButton>
 
-        {/* 5. Dark / Light Mode Switcher */}
+        {/* 5. Luz de velas / Noche estrellada */}
         <MagneticButton
           onClick={onToggleTheme}
-          tooltip={
-            isDarkMode
-              ? isEs
-                ? 'Luz de velas (Modo claro)'
-                : 'Candlelight (Light mode)'
-              : isEs
-              ? 'Noche estrellada (Modo oscuro)'
-              : 'Starlight (Dark mode)'
-          }
-          ariaLabel={isEs ? 'Alternar modo oscuro' : 'Toggle dark mode'}
+          tooltip={isDarkMode ? TEXTOS.temaClaro.tooltip : TEXTOS.temaOscuro.tooltip}
+          ariaLabel={isDarkMode ? TEXTOS.temaClaro.ariaLabel : TEXTOS.temaOscuro.ariaLabel}
         >
           <motion.div
             key={isDarkMode ? 'dark' : 'light'}
@@ -242,8 +265,8 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
         {/* 6. Subir suavemente */}
         <MagneticButton
           onClick={onScrollToTop}
-          tooltip={isEs ? 'Volver arriba' : 'Back to top'}
-          ariaLabel={isEs ? 'Subir al inicio' : 'Scroll to top'}
+          tooltip={TEXTOS.volverArriba.tooltip}
+          ariaLabel={TEXTOS.volverArriba.ariaLabel}
         >
           <ArrowUp className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
         </MagneticButton>

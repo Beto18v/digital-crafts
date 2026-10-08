@@ -5,95 +5,39 @@ import { motion } from 'framer-motion';
 import { Compass, ArrowDown } from 'lucide-react';
 import { Language } from '../types';
 
-export interface HeroTranslation {
+/**
+ * Textos centralizados de la sección Hero.
+ * Configuración fácil de editar y 100% en español cálido y romántico.
+ */
+const TEXTOS = {
   badge: {
-    label: string;
-    modulesSuffix: string;
-  };
-  titleWords: {
-    text: string;
-    isItalic?: boolean;
-  }[];
-  subtitle: string;
-  buttons: {
-    explore: string;
-    story: string;
-  };
-  filters: {
-    all: string;
-    live: string;
-    cooking: string;
-    art: string;
-  };
-}
-
-export const HERO_TRANSLATIONS: Record<Language, HeroTranslation> = {
-  es: {
-    badge: {
-      label: 'Espacio Privado para Parejas — Edición 2026',
-      modulesSuffix: 'módulos',
-    },
-    titleWords: [
-      { text: 'Nuestro' },
-      { text: 'Taller' },
-      { text: 'Creativo', isItalic: true },
-      { text: '&' },
-      { text: 'Digital', isItalic: true },
-    ],
-    subtitle:
-      'Un universo íntimo de experiencias interactivas concebidas para alimentar la complicidad: recetas gastronómicas para cocinar de noche, lienzos relajantes y mapas de recuerdos compartidos.',
-    buttons: {
-      explore: 'Explorar el Bento Grid',
-      story: 'Historia del Proyecto',
-    },
-    filters: {
-      all: 'Todos',
-      live: 'Disponibles',
-      cooking: 'Cocina & Citas',
-      art: 'Arte & Calma',
-    },
+    label: 'Nuestro Refugio Privado',
+    counterSuffix: 'rincones especiales',
   },
-  en: {
-    badge: {
-      label: 'Private Space for Couples — 2026 Edition',
-      modulesSuffix: 'modules',
-    },
-    titleWords: [
-      { text: 'Our' },
-      { text: 'Creative', isItalic: true },
-      { text: '&' },
-      { text: 'Digital', isItalic: true },
-      { text: 'Workshop' },
-    ],
-    subtitle:
-      'An intimate universe of interactive experiences designed to nurture connection: late-night cooking recipes, relaxing canvases, and maps of shared memories.',
-    buttons: {
-      explore: 'Explore the Bento Grid',
-      story: 'Project History',
-    },
-    filters: {
-      all: 'All',
-      live: 'Available',
-      cooking: 'Cooking & Dates',
-      art: 'Art & Calm',
-    },
+  titleWords: [
+    { text: 'Nuestro' },
+    { text: 'Refugio' },
+    { text: 'Creativo', isItalic: true },
+    { text: '&' },
+    { text: 'Digital', isItalic: true },
+  ],
+  subtitle:
+    'Un rincón íntimo creado con todo mi amor para celebrar lo que somos: recetas para cocinar a fuego lento, lienzos relajantes para pintar juntos y pequeños tesoros pensados solo para los dos.',
+  buttons: {
+    explore: 'Explorar nuestro espacio',
   },
 };
 
 interface HeroProps {
-  lang: Language;
+  lang?: Language;
   onExploreClick?: () => void;
   craftsCount: number;
 }
 
 export const Hero: React.FC<HeroProps> = ({
-  lang,
   onExploreClick,
   craftsCount,
 }) => {
-  // Consumimos el diccionario estático según el idioma activo
-  const t = HERO_TRANSLATIONS[lang] || HERO_TRANSLATIONS.es;
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -163,24 +107,23 @@ export const Hero: React.FC<HeroProps> = ({
           className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-900/5 dark:bg-white/10 border border-stone-200/80 dark:border-white/15 text-xs text-stone-600 dark:text-stone-300 font-medium mb-6 backdrop-blur-xs"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-          <span>{t.badge.label}</span>
+          <span>{TEXTOS.badge.label}</span>
           <span aria-hidden="true" className="text-stone-300 dark:text-stone-600">
             /
           </span>
           <span className="font-mono text-stone-500 dark:text-stone-400">
-            {craftsCount} {t.badge.modulesSuffix}
+            {craftsCount} {TEXTOS.badge.counterSuffix}
           </span>
         </motion.div>
 
         {/* Text Reveal Title with Staggered Framer Motion */}
         <motion.h1
-          key={lang} // Key triggers smooth re-animation on language switch
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           className="font-serif text-4xl sm:text-6xl md:text-7xl font-normal tracking-tight text-stone-900 dark:text-stone-100 leading-[1.08] mb-6 flex flex-wrap justify-center gap-x-3 sm:gap-x-4 gap-y-1 [text-wrap:balance]"
         >
-          {t.titleWords.map((item, index) => (
+          {TEXTOS.titleWords.map((item, index) => (
             <span
               key={`${item.text}-${index}`}
               className="inline-block overflow-hidden py-1"
@@ -201,16 +144,15 @@ export const Hero: React.FC<HeroProps> = ({
 
         {/* Subtitle with Fade In */}
         <motion.p
-          key={`sub-${lang}`}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] as const }}
           className="text-base sm:text-lg md:text-xl text-stone-600 dark:text-stone-400 max-w-2xl mx-auto leading-relaxed font-light mb-10 [text-wrap:balance]"
         >
-          {t.subtitle}
+          {TEXTOS.subtitle}
         </motion.p>
 
-        {/* Action Buttons */}
+        {/* Action Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -220,10 +162,10 @@ export const Hero: React.FC<HeroProps> = ({
           <button
             type="button"
             onClick={onExploreClick}
-            className="group relative px-6 py-3.5 rounded-full bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 font-medium hover:bg-stone-800 dark:hover:bg-white transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center gap-2.5 overflow-hidden"
+            className="group relative px-6 py-3.5 rounded-full bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 font-medium hover:bg-stone-800 dark:hover:bg-white transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center gap-2.5 overflow-hidden cursor-pointer"
           >
             <Compass className="w-4 h-4 text-rose-300 dark:text-rose-600 group-hover:rotate-45 transition-transform duration-300" />
-            <span>{t.buttons.explore}</span>
+            <span>{TEXTOS.buttons.explore}</span>
             <ArrowDown className="w-3.5 h-3.5 text-stone-400 dark:text-stone-600 group-hover:translate-y-0.5 transition-transform" />
           </button>
         </motion.div>

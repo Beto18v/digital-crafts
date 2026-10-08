@@ -44,11 +44,6 @@ const customMetadata: Record<
     subtitle: { es: 'Líneas suaves para revivir nuestro abrazo favorito', en: 'Soft lines capturing our warmest embrace' },
     category: 'Nosotros',
   },
-  '/us/Couple_line_art_illustration_20261007181241.jpg': {
-    title: { es: 'Nosotros — Conexión Espontánea', en: 'Us — Spontaneous Connection' },
-    subtitle: { es: 'Trazos que capturan nuestra complicidad cotidiana', en: 'Lines capturing our everyday closeness' },
-    category: 'Nosotros',
-  },
   '/us/Couple_posing_outdoors_20261007181050.jpg': {
     title: { es: 'Nosotros — Tarde al Aire Libre', en: 'Us — Outdoors Together' },
     subtitle: { es: 'Un paseo al sol lleno de calma y naturaleza', en: 'A sunny walk full of calm and nature' },

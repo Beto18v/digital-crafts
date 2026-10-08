@@ -2,22 +2,28 @@
 
 import React, { useState, useMemo } from 'react';
 import { ColoringPage } from '../data/pages';
-import { Image as ImageIcon, Sparkles, Filter } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
+
+/**
+ * Textos centralizados del carrusel de láminas.
+ */
+const TEXTOS = {
+  tituloSeccion: 'Nuestros lienzos para pintar',
+  categoriaTodas: 'Todas las láminas',
+};
 
 interface GallerySelectorProps {
   pages: ColoringPage[];
   currentPage: ColoringPage;
   onSelectPage: (page: ColoringPage) => void;
-  lang: 'es' | 'en';
+  lang?: 'es' | 'en';
 }
 
 export const GallerySelector: React.FC<GallerySelectorProps> = ({
   pages,
   currentPage,
   onSelectPage,
-  lang,
 }) => {
-  const isEs = lang === 'es';
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   // Categorías únicas
@@ -34,12 +40,12 @@ export const GallerySelector: React.FC<GallerySelectorProps> = ({
 
   return (
     <div className="w-full flex flex-col gap-3 p-3.5 sm:p-5 rounded-3xl bg-white/85 dark:bg-stone-900/85 backdrop-blur-xl border border-stone-200/80 dark:border-white/10 shadow-sm transition-all">
-      {/* Header Bar con contador */}
+      {/* Header Bar con contador de momentos */}
       <div className="flex flex-wrap items-center justify-between gap-2 px-1">
         <div className="flex items-center gap-2">
           <ImageIcon className="w-4 h-4 text-rose-500" />
           <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
-            {isEs ? 'Catálogo de Láminas para Colorear' : 'Coloring Pages Catalog'}
+            {TEXTOS.tituloSeccion}
           </span>
         </div>
         <span className="text-[11px] font-mono text-stone-400 dark:text-stone-500 bg-stone-100 dark:bg-stone-800/80 px-2 py-0.5 rounded-full">
@@ -58,7 +64,7 @@ export const GallerySelector: React.FC<GallerySelectorProps> = ({
               : 'bg-stone-100 dark:bg-stone-800/60 text-stone-600 dark:text-stone-400 hover:bg-stone-200/70 dark:hover:bg-stone-700/60'
           }`}
         >
-          {isEs ? 'Todas' : 'All'}
+          {TEXTOS.categoriaTodas}
         </button>
         {categories.map((cat) => {
           const isCatSelected = selectedCategory === cat;
@@ -101,7 +107,7 @@ export const GallerySelector: React.FC<GallerySelectorProps> = ({
                 {displayImage ? (
                   <img
                     src={displayImage}
-                    alt={page.title[lang]}
+                    alt={page.title.es || page.title.en}
                     className="w-full h-full object-contain pointer-events-none rounded-lg"
                     loading="lazy"
                   />
@@ -111,7 +117,7 @@ export const GallerySelector: React.FC<GallerySelectorProps> = ({
                       #{idx + 1}
                     </span>
                     <span className="text-[10px] text-stone-600 dark:text-stone-300 font-medium line-clamp-2 leading-tight">
-                      {page.title[lang]}
+                      {page.title.es || page.title.en}
                     </span>
                   </div>
                 )}
@@ -122,7 +128,7 @@ export const GallerySelector: React.FC<GallerySelectorProps> = ({
               </div>
 
               <span className="text-[11px] font-semibold text-stone-800 dark:text-stone-200 max-w-[100px] truncate block">
-                {page.title[lang]}
+                {page.title.es || page.title.en}
               </span>
               <span className="text-[10px] text-stone-400 dark:text-stone-500 uppercase tracking-wider font-mono">
                 {page.category}

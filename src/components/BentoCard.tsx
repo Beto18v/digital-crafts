@@ -2,23 +2,49 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowUpRight,
-  Clock,
   Sparkles,
   Lock,
   Utensils,
   Palette,
   Heart,
-  Music,
-  Star,
   Shuffle,
-  ChevronRight,
 } from 'lucide-react';
 import { ProjectCardInfo, Language } from '../types';
 import { cn } from '../lib/utils';
 
+/**
+ * Textos centralizados de la tarjeta individual.
+ */
+const TEXTOS = {
+  estados: {
+    disponible: 'Disponible',
+    enProceso: 'En preparación',
+    proximamente: 'Próximamente',
+  },
+  botones: {
+    comenzar: 'Comenzar',
+    verAvance: 'Ver avance',
+    proximamente: 'Próximamente',
+  },
+  favoritos: {
+    guardar: 'Guardar en nuestros favoritos',
+    quitar: 'Quitar de nuestros favoritos',
+  },
+  artworks: {
+    cocinaSubtitulo: 'Menú sugerido para los dos',
+    cocinaDetalles: '35 min · A la luz de las velas · Música suave',
+    cocinaListo: 'Listo',
+    lienzoSubtitulo: 'Lienzo interactivo · Colección de láminas',
+    lienzoTitulo: 'Acuarelas & Bote de pintura',
+    lienzoListo: 'Listo para pintar',
+    tarjetasSubtitulo: '52 Cartas íntimas',
+    tarjetasDetalles: 'Conversaciones & momentos espontáneos',
+  },
+};
+
 interface BentoCardProps {
   project: ProjectCardInfo;
-  lang: Language;
+  lang?: Language;
   onOpen: (project: ProjectCardInfo) => void;
   isFavorite?: boolean;
   onToggleFavorite?: (id: string) => void;
@@ -27,15 +53,12 @@ interface BentoCardProps {
 
 export const BentoCard: React.FC<BentoCardProps> = ({
   project,
-  lang,
   onOpen,
   isFavorite = false,
   onToggleFavorite,
   index,
 }) => {
-  const isEs = lang === 'es';
   const isLive = project.status === 'Live' || project.status === 'available';
-  const isComingSoon = project.status === 'Coming Soon' || project.status === 'coming-soon';
   const isInProgress = project.status === 'In Progress' || project.status === 'in-progress';
   const isFeatured = !!project.featured;
 
@@ -54,19 +77,19 @@ export const BentoCard: React.FC<BentoCardProps> = ({
   // Status badge config
   const statusConfig = isLive
     ? {
-        text: isEs ? 'Disponible' : 'Live Craft',
-        bgClass: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
+        text: TEXTOS.estados.disponible,
+        bgClass: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20',
         dotClass: 'bg-emerald-500 animate-pulse',
       }
     : isInProgress
     ? {
-        text: isEs ? 'En Proceso' : 'In Progress',
-        bgClass: 'bg-amber-500/10 text-amber-700 border-amber-500/20',
+        text: TEXTOS.estados.enProceso,
+        bgClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20',
         dotClass: 'bg-amber-500',
       }
     : {
-        text: isEs ? 'Próximamente' : 'Coming Soon',
-        bgClass: 'bg-stone-500/10 text-stone-600 border-stone-300',
+        text: TEXTOS.estados.proximamente,
+        bgClass: 'bg-stone-500/10 text-stone-600 dark:text-stone-400 border-stone-300 dark:border-stone-700',
         dotClass: 'bg-stone-400',
       };
 
@@ -75,7 +98,6 @@ export const BentoCard: React.FC<BentoCardProps> = ({
     if (project.id === 'date-night-playbook') {
       return (
         <div className="relative w-full h-full min-h-[170px] flex items-center justify-center p-6 select-none overflow-hidden">
-          {/* Decorative ambient elements */}
           <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 via-amber-500/5 to-transparent rounded-2xl" />
           <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6 w-full max-w-md bg-white/80 dark:bg-stone-900/80 backdrop-blur-md p-5 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-sm group-hover:shadow-md transition-shadow">
             <div className="w-14 h-14 rounded-2xl bg-rose-100 dark:bg-rose-950/70 flex items-center justify-center text-rose-600 dark:text-rose-300 shadow-inner shrink-0 group-hover:scale-105 transition-transform">
@@ -83,18 +105,20 @@ export const BentoCard: React.FC<BentoCardProps> = ({
             </div>
             <div className="text-left flex-1 min-w-0">
               <span className="text-[10px] font-mono uppercase tracking-wider text-rose-800/80 dark:text-rose-300 font-semibold">
-                {isEs ? 'Menú sugerido para dos' : 'Curated 2-person menu'}
+                {TEXTOS.artworks.cocinaSubtitulo}
               </span>
               <h4 className="font-serif text-base font-semibold text-stone-900 dark:text-stone-100 truncate">
-                {isEs ? 'Truffle Pappardelle & Barolo' : 'Truffle Pappardelle & Barolo'}
+                Truffle Pappardelle & Barolo
               </h4>
               <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-                {isEs ? '35 min · Luz de velas · Música jazz' : '35 min · Candlelight · Jazz score'}
+                {TEXTOS.artworks.cocinaDetalles}
               </p>
             </div>
             <div className="hidden sm:flex flex-col items-end text-xs text-stone-400 font-mono">
-              <span>🍷 98%</span>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-sans font-medium">Ready</span>
+              <span>🍷 100%</span>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-sans font-medium">
+                {TEXTOS.artworks.cocinaListo}
+              </span>
             </div>
           </div>
         </div>
@@ -111,10 +135,10 @@ export const BentoCard: React.FC<BentoCardProps> = ({
             </div>
             <div className="text-left flex-1 min-w-0">
               <span className="text-[10px] font-mono uppercase tracking-wider text-amber-800/80 dark:text-amber-300 font-semibold block">
-                {isEs ? 'Lienzo Interactivo · 10 Láminas' : 'Interactive Canvas · 10 Pages'}
+                {TEXTOS.artworks.lienzoSubtitulo}
               </span>
               <h4 className="font-serif text-base font-semibold text-stone-900 dark:text-stone-100 truncate">
-                {isEs ? 'Acuarelas & Bote de Relleno' : 'Watercolors & Flood Fill'}
+                {TEXTOS.artworks.lienzoTitulo}
               </h4>
               <div className="flex gap-1.5 items-center mt-1.5">
                 {['#f43f5e', '#fb923c', '#eab308', '#10b981', '#06b6d4', '#8b5cf6'].map((c, i) => (
@@ -127,28 +151,9 @@ export const BentoCard: React.FC<BentoCardProps> = ({
               </div>
             </div>
             <div className="hidden sm:flex flex-col items-end text-xs text-stone-400 font-mono">
-              <span className="text-amber-600 dark:text-amber-400 font-semibold">🎨 Live</span>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-sans font-medium">100% Ready</span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (project.id === 'adventure-jar') {
-      return (
-        <div className="relative w-full h-full min-h-[130px] flex items-center justify-center p-4 select-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-rose-500/5 to-transparent rounded-2xl" />
-          <div className="relative z-10 bg-white/85 dark:bg-stone-900/85 backdrop-blur-md px-4 py-3 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-xs flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/70 flex items-center justify-center text-purple-700 dark:text-purple-300">
-              <Shuffle className="w-5 h-5" />
-            </div>
-            <div className="text-left">
-              <span className="text-[10px] uppercase font-mono tracking-wider text-purple-700 dark:text-purple-300 font-semibold block">
-                {isEs ? '52 Cartas' : '52 Cards'}
-              </span>
-              <span className="text-xs text-stone-700 dark:text-stone-300 font-medium">
-                {isEs ? 'Micro-citas & preguntas' : 'Prompts & dates'}
+              <span className="text-amber-600 dark:text-amber-400 font-semibold">🎨 Activo</span>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-sans font-medium">
+                {TEXTOS.artworks.lienzoListo}
               </span>
             </div>
           </div>
@@ -156,44 +161,20 @@ export const BentoCard: React.FC<BentoCardProps> = ({
       );
     }
 
-    if (project.id === 'memory-capsule') {
-      return (
-        <div className="relative w-full h-full min-h-[140px] flex items-center justify-center p-4 select-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent rounded-2xl" />
-          <div className="relative z-10 flex items-center gap-4 bg-white/85 dark:bg-stone-900/85 backdrop-blur-md px-5 py-3 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-xs max-w-sm w-full">
-            <div className="w-11 h-11 rounded-full bg-emerald-100 dark:bg-emerald-950/70 flex items-center justify-center text-emerald-700 dark:text-emerald-300 shrink-0">
-              <Music className="w-5 h-5" />
-            </div>
-            <div className="text-left flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span className="text-[10px] font-mono text-emerald-800 dark:text-emerald-300 uppercase tracking-wider font-semibold">
-                  Tape #01
-                </span>
-              </div>
-              <p className="text-xs text-stone-800 dark:text-stone-200 font-medium truncate">
-                {isEs ? 'Nuestra canción en Florencia' : 'Our song in Florence'}
-              </p>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Default Stargazer
+    // Default: Adventure Jar
     return (
       <div className="relative w-full h-full min-h-[130px] flex items-center justify-center p-4 select-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-blue-500/5 to-transparent rounded-2xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-rose-500/5 to-transparent rounded-2xl" />
         <div className="relative z-10 bg-white/85 dark:bg-stone-900/85 backdrop-blur-md px-4 py-3 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-950/70 flex items-center justify-center text-indigo-700 dark:text-indigo-300">
-            <Star className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/70 flex items-center justify-center text-purple-700 dark:text-purple-300">
+            <Shuffle className="w-5 h-5" />
           </div>
           <div className="text-left">
-            <span className="text-[10px] uppercase font-mono tracking-wider text-indigo-700 dark:text-indigo-300 font-semibold block">
-              Sky Map
+            <span className="text-[10px] uppercase font-mono tracking-wider text-purple-700 dark:text-purple-300 font-semibold block">
+              {TEXTOS.artworks.tarjetasSubtitulo}
             </span>
             <span className="text-xs text-stone-700 dark:text-stone-300 font-medium">
-              {isEs ? 'Alineación de estrellas' : 'Celestial alignment'}
+              {TEXTOS.artworks.tarjetasDetalles}
             </span>
           </div>
         </div>
@@ -257,7 +238,7 @@ export const BentoCard: React.FC<BentoCardProps> = ({
             ·
           </span>
           <span className="text-xs text-stone-500 dark:text-stone-400 font-medium hidden sm:inline">
-            {project.category[lang]}
+            {project.category.es || project.category.en}
           </span>
         </div>
 
@@ -269,7 +250,8 @@ export const BentoCard: React.FC<BentoCardProps> = ({
               e.stopPropagation();
               onToggleFavorite(project.id);
             }}
-            aria-label={isFavorite ? 'Quitar favorito' : 'Guardar favorito'}
+            aria-label={isFavorite ? TEXTOS.favoritos.quitar : TEXTOS.favoritos.guardar}
+            title={isFavorite ? TEXTOS.favoritos.quitar : TEXTOS.favoritos.guardar}
             className="w-8 h-8 rounded-full bg-stone-100/80 dark:bg-stone-800/80 hover:bg-white dark:hover:bg-stone-700 flex items-center justify-center text-stone-400 hover:text-rose-500 transition-colors shadow-2xs cursor-pointer"
           >
             <Heart
@@ -296,12 +278,12 @@ export const BentoCard: React.FC<BentoCardProps> = ({
             isFeatured ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'
           )}
         >
-          {project.title[lang]}
+          {project.title.es || project.title.en}
         </h3>
 
         {/* Description */}
         <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed mb-5 line-clamp-2">
-          {project.description[lang]}
+          {project.description.es || project.description.en}
         </p>
 
         {/* Tags with clean unboxed styling */}
@@ -311,7 +293,7 @@ export const BentoCard: React.FC<BentoCardProps> = ({
               key={i}
               className="text-[11px] font-medium text-stone-500 dark:text-stone-300 bg-stone-100/80 dark:bg-stone-800/80 px-2 py-0.5 rounded-md"
             >
-              #{tag[lang]}
+              #{tag.es || tag.en}
             </span>
           ))}
         </div>
@@ -328,7 +310,7 @@ export const BentoCard: React.FC<BentoCardProps> = ({
               onClick={() => onOpen(project)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white dark:text-stone-900 bg-stone-900 dark:bg-stone-100 hover:bg-rose-950 dark:hover:bg-rose-200 active:scale-[0.98] transition-all shadow-xs cursor-pointer group/btn"
             >
-              <span>{project.actionLabel ? project.actionLabel[lang] : isEs ? 'Abrir Experiencia' : 'Open Experience'}</span>
+              <span>{project.actionLabel?.es || TEXTOS.botones.comenzar}</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-stone-300 dark:text-stone-700 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
             </button>
           ) : isInProgress ? (
@@ -338,28 +320,23 @@ export const BentoCard: React.FC<BentoCardProps> = ({
                 disabled
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-stone-500 dark:text-stone-400 bg-stone-100/80 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700/60 opacity-75 pointer-events-none select-none"
               >
-                <span>{project.actionLabel ? project.actionLabel[lang] : isEs ? 'Ver avance' : 'Preview'}</span>
+                <span>{project.actionLabel?.es || TEXTOS.botones.verAvance}</span>
                 <Sparkles className="w-3.5 h-3.5 text-stone-400" />
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => onOpen(project)}
-                className={cn(
-                  'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-colors',
-                  project.isDemo
-                    ? 'text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/40 opacity-90 cursor-pointer'
-                    : 'text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/40 cursor-pointer'
-                )}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/40 cursor-pointer transition-colors"
               >
-                <span>{project.actionLabel ? project.actionLabel[lang] : isEs ? 'Ver avance' : 'Preview'}</span>
+                <span>{project.actionLabel?.es || TEXTOS.botones.verAvance}</span>
                 <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
               </button>
             )
           ) : (
             <div className="inline-flex items-center gap-1.5 text-xs text-stone-400 dark:text-stone-500 font-medium select-none">
               <Lock className="w-3.5 h-3.5" />
-              <span>{isEs ? 'En Construcción' : 'Under Construction'}</span>
+              <span>{TEXTOS.botones.proximamente}</span>
             </div>
           )}
         </div>

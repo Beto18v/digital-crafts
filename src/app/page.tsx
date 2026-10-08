@@ -12,19 +12,26 @@ import { Language, ProjectCardInfo } from '../types';
 import { Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+/**
+ * Textos centralizados de la página principal.
+ */
+const TEXTOS = {
+  mensajeAmorToast: 'Te amo. Gracias por construir tantos momentos juntos.',
+};
+
 export default function Page() {
   const [lang, setLang] = useState<Language>('es');
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [favorites, setFavorites] = useState<string[]>([
+    'coloring-canvas',
     'date-night-playbook',
-    'adventure-jar',
   ]);
   const [onlyFavorites, setOnlyFavorites] = useState<boolean>(false);
   const [activeModalProject, setActiveModalProject] = useState<ProjectCardInfo | null>(null);
   const [showLoveToast, setShowLoveToast] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'hub' | 'coloring'>('hub');
 
-  // Persistent Dark Mode State
+  // Modo Oscuro persistente (Luz de velas vs Noche estrellada)
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme');
@@ -44,16 +51,14 @@ export default function Page() {
     }
   }, [isDarkMode]);
 
-  const isEs = lang === 'es';
-
-  // Toggle favorite / bookmark
+  // Alternar favoritos
   const handleToggleFavorite = (id: string) => {
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  // Filter projects
+  // Filtrado de rincones
   const filteredProjects = projects.filter((project) => {
     if (onlyFavorites && !favorites.includes(project.id)) {
       return false;
@@ -109,7 +114,7 @@ export default function Page() {
 
   return (
     <div className="relative min-h-screen bg-[#faf7f2] dark:bg-[#121013] text-stone-800 dark:text-stone-100 antialiased selection:bg-rose-200 dark:selection:bg-rose-900 selection:text-stone-900 dark:selection:text-rose-100 overflow-x-clip transition-colors duration-300">
-      {/* Love Sparkle Floating Toast Notification */}
+      {/* Notificación flotante de amor */}
       <AnimatePresence>
         {showLoveToast && (
           <motion.div
@@ -119,27 +124,23 @@ export default function Page() {
             className="fixed top-6 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-xl border border-rose-200 dark:border-rose-900/40 shadow-xl shadow-rose-900/10 flex items-center gap-2.5 text-xs text-rose-950 dark:text-rose-200 font-medium pointer-events-none"
           >
             <Heart className="w-4 h-4 fill-rose-500 text-rose-500 animate-pulse" />
-            <span>
-              {isEs
-                ? 'Te amo. Gracias por construir tantos momentos juntos.'
-                : 'I love you. Thank you for crafting so many moments together.'}
-            </span>
+            <span>{TEXTOS.mensajeAmorToast}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Main Solid Content Container (Lifts like a curtain to reveal the footer below) */}
+      {/* Contenedor principal que se levanta como un telón */}
       <main className="relative z-10 bg-[#faf7f2] dark:bg-[#121013] shadow-[0_25px_60px_rgba(40,20,20,0.08)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.6)] mb-[480px] sm:mb-[540px] md:mb-[580px] rounded-b-[2.5rem] sm:rounded-b-[3.5rem] border-b border-stone-200/80 dark:border-white/10 transition-colors duration-300">
         {viewMode === 'hub' ? (
           <>
-            {/* Hero Section */}
+            {/* Sección Hero */}
             <Hero
               lang={lang}
               craftsCount={projects.length}
               onExploreClick={scrollToBento}
             />
 
-            {/* Bento Grid Architecture */}
+            {/* Cuadrícula de rincones */}
             <BentoGrid
               projects={filteredProjects}
               lang={lang}
@@ -155,7 +156,7 @@ export default function Page() {
             />
           </>
         ) : (
-          /* Interactive Coloring Studio */
+          /* Estudio interactivo de pintura */
           <div className="pt-8 sm:pt-12 pb-16">
             <ColoringStudio
               lang={lang}
@@ -165,10 +166,10 @@ export default function Page() {
         )}
       </main>
 
-      {/* Curtain Reveal Footer (Fixed at z-0, revealed as the main layer scrolls up) */}
+      {/* Pie de página telón */}
       <RevealFooter lang={lang} />
 
-      {/* Floating Dynamic Dock (Fixed at bottom z-50, always accessible) */}
+      {/* Dock dinámico inferior */}
       <FloatingDock
         lang={lang}
         onToggleLang={() => setLang(lang === 'es' ? 'en' : 'es')}
@@ -179,7 +180,7 @@ export default function Page() {
         onToggleTheme={() => setIsDarkMode((prev) => !prev)}
       />
 
-      {/* Interactive Project Modal */}
+      {/* Modal interactivo de avance */}
       <ProjectModal
         project={activeModalProject}
         lang={lang}

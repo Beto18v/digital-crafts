@@ -1,55 +1,62 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { Pipette, Sparkles } from 'lucide-react';
+import { Pipette } from 'lucide-react';
+
+/**
+ * Textos centralizados de la paleta de colores.
+ */
+const TEXTOS = {
+  colorPersonalizado: 'Tono personalizado',
+  elegirColorPersonalizado: 'Elegir color personalizado',
+  colorPersonalizadoTitulo: 'Paleta personalizada',
+};
+
+export const PRESET_COLORS = [
+  // Rosas & Románticos
+  { hex: '#f43f5e', name: 'Rosa Romántico' },
+  { hex: '#fda4af', name: 'Pétalo Suave' },
+  { hex: '#fecdd3', name: 'Rosa Pastel' },
+  { hex: '#e11d48', name: 'Cereza Enamorada' },
+
+  // Cálidos & Atardecer
+  { hex: '#fb923c', name: 'Melocotón Cálido' },
+  { hex: '#f97316', name: 'Terracota' },
+  { hex: '#ea580c', name: 'Atardecer Juntos' },
+  { hex: '#fef08a', name: 'Vainilla Suave' },
+  { hex: '#facc15', name: 'Miel Dorada' },
+
+  // Botánicos & Calma
+  { hex: '#86efac', name: 'Menta Fresca' },
+  { hex: '#4ade80', name: 'Verde Salvia' },
+  { hex: '#16a34a', name: 'Eucalipto' },
+  { hex: '#14532d', name: 'Pino Bosque' },
+
+  // Celestes & Lavanda
+  { hex: '#a5f3fc', name: 'Brisa Serena' },
+  { hex: '#38bdf8', name: 'Azul Agua' },
+  { hex: '#0284c7', name: 'Azul Noche' },
+  { hex: '#c084fc', name: 'Lavanda Dulce' },
+  { hex: '#7c3aed', name: 'Violeta Profundo' },
+
+  // Tierras & Neutros
+  { hex: '#d6d3d1', name: 'Gris Perla' },
+  { hex: '#a8a29e', name: 'Piedra Cálida' },
+  { hex: '#78716c', name: 'Café Tostado' },
+  { hex: '#292524', name: 'Tinta Suave' },
+  { hex: '#ffffff', name: 'Lienzo Blanco' },
+];
 
 interface ColorPaletteProps {
   currentColor: string;
   onSelectColor: (color: string) => void;
-  lang: 'es' | 'en';
+  lang?: 'es' | 'en';
 }
-
-export const PRESET_COLORS = [
-  // Romantic & Pastels
-  { hex: '#f43f5e', name: { es: 'Rosa Romántico', en: 'Romantic Rose' } },
-  { hex: '#fda4af', name: { es: 'Pétalo Blush', en: 'Blush Petal' } },
-  { hex: '#fecdd3', name: { es: 'Rosa Pastel', en: 'Pastel Pink' } },
-  { hex: '#e11d48', name: { es: 'Cereza Intensa', en: 'Deep Cherry' } },
-
-  // Warm Terracottas & Sunset
-  { hex: '#fb923c', name: { es: 'Melocotón Cálido', en: 'Warm Peach' } },
-  { hex: '#f97316', name: { es: 'Terracota', en: 'Terracotta' } },
-  { hex: '#ea580c', name: { es: 'Atardecer', en: 'Sunset Ochre' } },
-  { hex: '#fef08a', name: { es: 'Vainilla Suave', en: 'Soft Vanilla' } },
-  { hex: '#facc15', name: { es: 'Miel Dorada', en: 'Golden Honey' } },
-
-  // Sage & Botanical Greens
-  { hex: '#86efac', name: { es: 'Menta Suave', en: 'Soft Mint' } },
-  { hex: '#4ade80', name: { es: 'Verde Salvia', en: 'Sage Green' } },
-  { hex: '#16a34a', name: { es: 'Eucalipto', en: 'Eucalyptus' } },
-  { hex: '#14532d', name: { es: 'Pino Bosque', en: 'Forest Pine' } },
-
-  // Muted Blues & Lavender
-  { hex: '#a5f3fc', name: { es: 'Brisa Celeste', en: 'Sky Breeze' } },
-  { hex: '#38bdf8', name: { es: 'Azul Agua', en: 'Ocean Mist' } },
-  { hex: '#0284c7', name: { es: 'Azul Noche', en: 'Night Sky' } },
-  { hex: '#c084fc', name: { es: 'Lavanda Dulce', en: 'Sweet Lavender' } },
-  { hex: '#7c3aed', name: { es: 'Violeta Profundo', en: 'Deep Violet' } },
-
-  // Earth & Neutrals
-  { hex: '#d6d3d1', name: { es: 'Gris Perla', en: 'Pearl Gray' } },
-  { hex: '#a8a29e', name: { es: 'Piedra Cálida', en: 'Warm Stone' } },
-  { hex: '#78716c', name: { es: 'Café Tostado', en: 'Roasted Coffee' } },
-  { hex: '#292524', name: { es: 'Tinta Negra', en: 'Ink Black' } },
-  { hex: '#ffffff', name: { es: 'Blanco Lienzo', en: 'Canvas White' } },
-];
 
 export const ColorPalette: React.FC<ColorPaletteProps> = ({
   currentColor,
   onSelectColor,
-  lang,
 }) => {
-  const isEs = lang === 'es';
   const colorInputRef = useRef<HTMLInputElement>(null);
 
   const activeColorObj = PRESET_COLORS.find(
@@ -65,11 +72,7 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
             style={{ backgroundColor: currentColor }}
           />
           <span className="text-xs font-medium text-stone-700 dark:text-stone-300">
-            {activeColorObj
-              ? activeColorObj.name[lang]
-              : isEs
-              ? 'Color Personalizado'
-              : 'Custom Shade'}
+            {activeColorObj ? activeColorObj.name : TEXTOS.colorPersonalizado}
           </span>
         </div>
 
@@ -78,7 +81,7 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
         </span>
       </div>
 
-      {/* Swatches Matrix */}
+      {/* Matriz de tonalidades */}
       <div className="grid grid-cols-8 sm:grid-cols-12 gap-1.5 sm:gap-2">
         {PRESET_COLORS.map((color) => {
           const isSelected = currentColor.toLowerCase() === color.hex.toLowerCase();
@@ -87,8 +90,8 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
               key={color.hex}
               type="button"
               onClick={() => onSelectColor(color.hex)}
-              title={color.name[lang]}
-              aria-label={color.name[lang]}
+              title={color.name}
+              aria-label={color.name}
               style={{ backgroundColor: color.hex }}
               className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-black/10 dark:border-white/10 transition-all duration-200 cursor-pointer ${
                 isSelected
@@ -99,7 +102,7 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
           );
         })}
 
-        {/* Custom Color Pipette Button */}
+        {/* Pipeta para color libre */}
         <div className="relative flex items-center justify-center">
           <input
             ref={colorInputRef}
@@ -108,12 +111,13 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
             onChange={(e) => onSelectColor(e.target.value)}
             className="sr-only"
             id="custom-color-picker"
-            aria-label={isEs ? 'Elegir color personalizado' : 'Choose custom color'}
+            aria-label={TEXTOS.elegirColorPersonalizado}
           />
           <button
             type="button"
             onClick={() => colorInputRef.current?.click()}
-            title={isEs ? 'Color personalizado' : 'Custom color picker'}
+            title={TEXTOS.colorPersonalizadoTitulo}
+            aria-label={TEXTOS.elegirColorPersonalizado}
             className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-white/20 flex items-center justify-center text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:scale-105 transition-all shadow-2xs cursor-pointer"
           >
             <Pipette className="w-3.5 h-3.5" />
