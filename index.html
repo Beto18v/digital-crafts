@@ -2,17 +2,29 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Our Digital Crafts — Nuestras Manualidades Digitales</title>
-    <meta name="description" content="El hub digital y catálogo creativo para parejas con proyectos interactivos, recetas y lienzos compartidos." />
-    <meta property="og:title" content="Our Digital Crafts — Nuestras Manualidades Digitales" />
-    <meta property="og:description" content="El hub digital y catálogo creativo para parejas con proyectos interactivos, recetas y lienzos compartidos." />
+    <!-- Bloquea el zoom automático del navegador en móviles al tocar el lienzo -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+    <!-- Título y Favicon -->
+    <title>Nuestro Refugio Digital</title>
+    <!-- Asegúrate de subir un archivo corazon.png a la carpeta /public -->
+    <link rel="icon" type="image/png" href="/corazon.png" />
+    <meta name="description" content="Un espacio íntimo y creativo diseñado solo para nosotros." />
+    
+    <!-- Open Graph (WhatsApp, Telegram, iMessage) -->
+    <meta property="og:title" content="Nuestro Refugio Digital ❤️" />
+    <meta property="og:description" content="Un rincón tranquilo para disfrutar de nuestro tiempo juntos." />
     <meta property="og:type" content="website" />
+    <!-- Asegúrate de subir una captura bonita de la app a la carpeta /public con el nombre preview.jpg -->
+    <meta property="og:image" content="/preview.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
+    
+    <!-- Tipografías (No modificar, mantienen tu diseño actual) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
+  
   <body class="bg-[#faf9f5] text-stone-800 antialiased selection:bg-rose-100 selection:text-stone-900">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
