@@ -20,230 +20,286 @@ export interface ColoringCanvasHandle {
 }
 
 interface ColoringCanvasProps {
-  currentPage: ColoringPage;
+  currentImage?: ColoringPage;
+  currentPage?: ColoringPage;
   currentColor: string;
   tolerance?: number;
   borderThreshold?: number;
+  zoomFactor?: number;
   onCanUndoChange?: (canUndo: boolean) => void;
 }
 
-const CANVAS_WIDTH = 900;
-const CANVAS_HEIGHT = 900;
+const DEFAULT_CANVAS_SIZE = 900;
 const MAX_UNDO_STACK = 20;
+
+/**
+ * Función centralizada para dibujar la imagen optimizada en el canvas.
+ * Aplica comportamiento object-fit: cover y un factor de zoom adicional (zoomFactor)
+ * para eliminar completamente cualquier margen o línea blanca perimetral del archivo original.
+ */
+export function drawOptimizedImage(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  canvas: HTMLCanvasElement,
+  zoomFactor: number = 1.08
+): void {
+  // Limpieza inicial con fondo blanco limpio
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+  const canvasRatio = canvasWidth / canvasHeight;
+
+  const imgWidth = img.naturalWidth || img.width;
+  const imgHeight = img.naturalHeight || img.height;
+  if (!imgWidth || !imgHeight) return;
+
+  const imgRatio = imgWidth / imgHeight;
+
+  // Cálculo de dimensiones de origen aplicando el factor de zoom extra
+  let sWidth: number;
+  let sHeight: number;
+
+  if (imgRatio > canvasRatio) {
+    // La imagen es más ancha que el canvas: recortamos los lados
+    sHeight = imgHeight / zoomFactor;
+    sWidth = (imgHeight * canvasRatio) / zoomFactor;
+  } else {
+    // La imagen es más alta que el canvas: recortamos arriba y abajo
+    sWidth = imgWidth / zoomFactor;
+    sHeight = (imgWidth / canvasRatio) / zoomFactor;
+  }
+
+  // Coordenadas de origen (sx, sy) centradas
+  const sx = (imgWidth - sWidth) / 2;
+  const sy = (imgHeight - sHeight) / 2;
+
+  // Firma completa para estirar de esquina a esquina a sangre sin dejar ningún gap
+  ctx.drawImage(
+    img,
+    sx,
+    sy,
+    sWidth,
+    sHeight,
+    0,
+    0,
+    canvasWidth,
+    canvasHeight
+  );
+}
 
 export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasProps>(
   (
     {
+      currentImage,
       currentPage,
       currentColor,
       tolerance = 36,
       borderThreshold = 130,
+      zoomFactor = 1.08,
       onCanUndoChange,
     },
     ref
   ) => {
+    // Admite tanto currentImage como currentPage para máxima compatibilidad
+    const activeImage = currentImage || currentPage;
+
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const historyStack = useRef<ImageData[]>([]);
     const [historyLength, setHistoryLength] = useState<number>(0);
     const [paintRevision, setPaintRevision] = useState<number>(0);
 
-    // Rastreo de la última imagen cargada para evitar re-dibujados innecesarios y parpadeos
-    const loadedPageIdRef = useRef<string | null>(null);
+    /**
+     * Sincroniza la resolución nativa del canvas (width/height) con las dimensiones DOM reales (offsetWidth/offsetHeight)
+     */
+    const syncCanvasResolution = useCallback((canvas: HTMLCanvasElement) => {
+      const targetW = canvas.offsetWidth > 0 ? canvas.offsetWidth : DEFAULT_CANVAS_SIZE;
+      const targetH = canvas.offsetHeight > 0 ? canvas.offsetHeight : DEFAULT_CANVAS_SIZE;
 
-    // Auto-save: Guarda automáticamente el estado actual del lienzo en localStorage
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+    }, []);
+
+    // Auto-save: Guarda automáticamente el estado actual del lienzo en localStorage bajo clave dinámica por dibujo
     useEffect(() => {
-      if (paintRevision === 0) return;
+      if (paintRevision === 0 || !activeImage) return;
       const canvas = canvasRef.current;
       if (!canvas) return;
 
       try {
         const dataUrl = canvas.toDataURL('image/png');
-        localStorage.setItem(`coloring-canvas-state-${currentPage.id}`, dataUrl);
+        localStorage.setItem(`coloring-state-${activeImage.id}`, dataUrl);
       } catch (err) {
         console.warn('[Auto-Save] Error saving canvas to localStorage:', err);
       }
-    }, [paintRevision, currentPage.id]);
+    }, [paintRevision, activeImage?.id]);
 
     /**
-     * Dibuja la imagen base original en el lienzo con object-fit: cover
-     * y recorte extra (zoom = 1.08) para eliminar líneas y márgenes blancos perimetrales.
+     * Ciclo de vida principal del Canvas:
+     * 1. Dependencia estricta en [activeImage?.id]: se dispara inmediatamente cuando cambia la miniatura seleccionada.
+     * 2. Limpieza previa inmediata con ctx.clearRect para borrar cualquier trazo anterior.
+     * 3. Carga asíncrona de imagen con img.onload ejecutando drawOptimizedImage (o restauración desde localStorage dinámico).
      */
-    const drawBaseImage = useCallback(
-      (
-        targetCtx: CanvasRenderingContext2D,
-        canvas: HTMLCanvasElement,
-        onDone?: () => void
-      ) => {
-        const hasRealImage =
-          Boolean(currentPage.imagePath) &&
-          !currentPage.imagePath.startsWith('/images/coloring-');
+    useEffect(() => {
+      if (!activeImage) return;
 
-        if (hasRealImage) {
+      let isCancelled = false;
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return;
+
+      // 1. Sincronizar dimensiones nativas con el contenedor
+      syncCanvasResolution(canvas);
+
+      // 2. Limpieza Previa (Clear): Borrar el lienzo completo al instante al cambiar de imagen
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Reiniciar estado de deshacer y revisiones para el nuevo dibujo
+      setPaintRevision(0);
+      historyStack.current = [];
+      setHistoryLength(0);
+      if (onCanUndoChange) onCanUndoChange(false);
+
+      const commitSnapshot = () => {
+        if (isCancelled || !canvasRef.current) return;
+        const currentCtx = canvasRef.current.getContext('2d', {
+          willReadFrequently: true,
+        });
+        if (!currentCtx) return;
+
+        const baseState = currentCtx.getImageData(
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
+        historyStack.current = [baseState];
+        setHistoryLength(1);
+        if (onCanUndoChange) onCanUndoChange(false);
+      };
+
+      const loadOriginalImage = () => {
+        if (activeImage.imagePath) {
           const img = new Image();
           img.crossOrigin = 'anonymous';
 
           img.onload = () => {
-            if (!canvasRef.current || loadedPageIdRef.current !== currentPage.id) {
-              return;
-            }
-            const currentCtx = canvasRef.current.getContext('2d', {
+            if (isCancelled || !canvasRef.current) return;
+            const activeCtx = canvasRef.current.getContext('2d', {
               willReadFrequently: true,
             });
-            if (!currentCtx) return;
+            if (!activeCtx) return;
 
-            // Limpieza previa con fondo blanco
-            currentCtx.clearRect(0, 0, canvas.width, canvas.height);
-            currentCtx.fillStyle = '#ffffff';
-            currentCtx.fillRect(0, 0, canvas.width, canvas.height);
+            // Sincronizar resolución antes de pintar
+            syncCanvasResolution(canvasRef.current);
 
-            // 1. Factor de zoom (recorta un 8% adicional para eliminar márgenes blancos perimetrales)
-            const zoom = 1.08;
+            // Dibuja la imagen optimizada con recorte y zoom
+            drawOptimizedImage(activeCtx, img, canvasRef.current, zoomFactor);
 
-            // 2. Proporciones de aspecto del canvas y de la imagen original
-            const canvasRatio = canvas.width / canvas.height;
-            const imgWidth = img.naturalWidth || img.width;
-            const imgHeight = img.naturalHeight || img.height;
-            const imgRatio = imgWidth / imgHeight;
-
-            // 3. Cálculo de sx, sy, sWidth, sHeight según si es más ancha o más alta
-            let sWidth: number;
-            let sHeight: number;
-
-            if (imgRatio > canvasRatio) {
-              // La imagen es más ancha que el canvas: recortamos los lados
-              sHeight = imgHeight / zoom;
-              sWidth = (imgHeight * canvasRatio) / zoom;
-            } else {
-              // La imagen es más alta que el canvas: recortamos arriba y abajo
-              sWidth = imgWidth / zoom;
-              sHeight = (imgWidth / canvasRatio) / zoom;
+            if (typeof activeImage.renderLineArt === 'function') {
+              activeImage.renderLineArt(
+                activeCtx,
+                canvasRef.current.width,
+                canvasRef.current.height
+              );
             }
-
-            // Coordenadas origen centradas
-            const sx = (imgWidth - sWidth) / 2;
-            const sy = (imgHeight - sHeight) / 2;
-
-            // 4. Firma completa: llena exactamente el 100% del canvas a sangre
-            currentCtx.drawImage(
-              img,
-              sx,
-              sy,
-              sWidth,
-              sHeight,
-              0,
-              0,
-              canvas.width,
-              canvas.height
-            );
-
-            if (typeof currentPage.renderLineArt === 'function') {
-              currentPage.renderLineArt(currentCtx, canvas.width, canvas.height);
-            }
-
-            if (onDone) onDone();
-          };
-
-          img.onerror = (err) => {
-            console.warn('Failed loading imagePath on canvas, falling back', err);
-            if (typeof currentPage.renderLineArt === 'function') {
-              currentPage.renderLineArt(targetCtx, canvas.width, canvas.height);
-            }
-            if (onDone) onDone();
-          };
-
-          img.src = currentPage.imagePath;
-        } else {
-          targetCtx.fillStyle = '#ffffff';
-          targetCtx.fillRect(0, 0, canvas.width, canvas.height);
-          if (typeof currentPage.renderLineArt === 'function') {
-            currentPage.renderLineArt(targetCtx, canvas.width, canvas.height);
-          }
-          if (onDone) onDone();
-        }
-      },
-      [currentPage]
-    );
-
-    // Redraw y restauración de estado con localStorage o imagen original
-    const renderBasePage = useCallback(
-      (forceOriginal: boolean = false) => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        if (!ctx) return;
-
-        canvas.width = CANVAS_WIDTH;
-        canvas.height = CANVAS_HEIGHT;
-
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-        const targetPageId = currentPage.id;
-
-        const commitSnapshot = () => {
-          if (!canvasRef.current || loadedPageIdRef.current !== targetPageId) return;
-          const currentCtx = canvasRef.current.getContext('2d', {
-            willReadFrequently: true,
-          });
-          if (!currentCtx) return;
-          const baseState = currentCtx.getImageData(
-            0,
-            0,
-            CANVAS_WIDTH,
-            CANVAS_HEIGHT
-          );
-          historyStack.current = [baseState];
-          setHistoryLength(1);
-          if (onCanUndoChange) onCanUndoChange(false);
-        };
-
-        const savedDataUrl = !forceOriginal
-          ? localStorage.getItem(`coloring-canvas-state-${currentPage.id}`)
-          : null;
-
-        if (savedDataUrl) {
-          const savedImg = new Image();
-          savedImg.onload = () => {
-            if (!canvasRef.current || loadedPageIdRef.current !== targetPageId) {
-              return;
-            }
-            const currentCtx = canvasRef.current.getContext('2d', {
-              willReadFrequently: true,
-            });
-            if (!currentCtx) return;
-
-            currentCtx.fillStyle = '#ffffff';
-            currentCtx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            currentCtx.drawImage(savedImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
             commitSnapshot();
           };
 
-          savedImg.onerror = () => {
-            console.warn(
-              'Failed to load saved state from localStorage, rendering original'
-            );
-            localStorage.removeItem(`coloring-canvas-state-${currentPage.id}`);
-            drawBaseImage(ctx, canvas, commitSnapshot);
+          img.onerror = (err) => {
+            if (isCancelled) return;
+            console.warn('Error al cargar la imagen del lienzo:', err);
+
+            if (!canvasRef.current) return;
+            const activeCtx = canvasRef.current.getContext('2d', {
+              willReadFrequently: true,
+            });
+            if (activeCtx) {
+              activeCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+              activeCtx.fillStyle = '#ffffff';
+              activeCtx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+
+              if (typeof activeImage.renderLineArt === 'function') {
+                activeImage.renderLineArt(
+                  activeCtx,
+                  canvasRef.current.width,
+                  canvasRef.current.height
+                );
+              }
+            }
+            commitSnapshot();
           };
 
-          savedImg.src = savedDataUrl;
-        } else {
-          drawBaseImage(ctx, canvas, commitSnapshot);
+          img.src = activeImage.imagePath;
+        } else if (typeof activeImage.renderLineArt === 'function') {
+          activeImage.renderLineArt(ctx, canvas.width, canvas.height);
+          commitSnapshot();
         }
-      },
-      [currentPage, drawBaseImage, onCanUndoChange]
-    );
+      };
 
-    // Carga de imagen optimizada: no parpadea ni redibuja si la imagen actual no ha cambiado
-    useEffect(() => {
-      if (loadedPageIdRef.current === currentPage.id) {
-        return;
+      // 3. Revisar si existe estado previo guardado bajo la clave dinámica específica de este dibujo
+      let savedDataUrl: string | null = null;
+      try {
+        savedDataUrl =
+          localStorage.getItem(`coloring-state-${activeImage.id}`) ||
+          localStorage.getItem(`coloring-canvas-state-${activeImage.id}`);
+      } catch (err) {
+        console.warn('Error al acceder a localStorage:', err);
       }
-      loadedPageIdRef.current = currentPage.id;
-      setPaintRevision(0);
-      renderBasePage(false);
-    }, [currentPage.id, renderBasePage]);
+
+      if (savedDataUrl) {
+        const savedImg = new Image();
+        savedImg.onload = () => {
+          if (isCancelled || !canvasRef.current) return;
+          const activeCtx = canvasRef.current.getContext('2d', {
+            willReadFrequently: true,
+          });
+          if (!activeCtx) return;
+
+          syncCanvasResolution(canvasRef.current);
+          activeCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+          activeCtx.fillStyle = '#ffffff';
+          activeCtx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+          activeCtx.drawImage(
+            savedImg,
+            0,
+            0,
+            canvasRef.current.width,
+            canvasRef.current.height
+          );
+
+          commitSnapshot();
+        };
+
+        savedImg.onerror = () => {
+          if (isCancelled) return;
+          console.warn('Estado en localStorage corrupto, redibujando imagen base original');
+          try {
+            localStorage.removeItem(`coloring-state-${activeImage.id}`);
+            localStorage.removeItem(`coloring-canvas-state-${activeImage.id}`);
+          } catch (_) {}
+          loadOriginalImage();
+        };
+
+        savedImg.src = savedDataUrl;
+      } else {
+        // Carga fresca de la imagen original
+        loadOriginalImage();
+      }
+
+      return () => {
+        isCancelled = true;
+      };
+    }, [activeImage?.id, activeImage?.imagePath, zoomFactor, onCanUndoChange, syncCanvasResolution]);
 
     // Función que ejecuta el flood fill envuelta en useCallback
     const executeFillAt = useCallback(
@@ -318,18 +374,21 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
     }, [onCanUndoChange]);
 
     /**
-     * Limpiar (Clear / Reset) ejecutando los 4 pasos obligatorios en orden:
-     * 1. Borrar el LocalStorage específico de esta imagen
-     * 2. Limpiar el Historial de Deshacer (setHistory([]) / vaciar pila)
+     * Limpiar (Clear): Ejecuta estrictamente los 4 pasos en orden:
+     * 1. Borrar el LocalStorage específico del dibujo activo
+     * 2. Limpiar el Historial de Deshacer
      * 3. Limpiar el Lienzo (ctx.clearRect)
-     * 4. Redibujar la Imagen Base original con matemática de recorte/zoom
+     * 4. Redibujar la Imagen Base original usando exactamente drawOptimizedImage dentro de onload
      */
     const handleClear = useCallback(() => {
+      if (!activeImage) return;
+
       // 1. Borrar el LocalStorage
       try {
-        localStorage.removeItem(`coloring-canvas-state-${currentPage.id}`);
+        localStorage.removeItem(`coloring-state-${activeImage.id}`);
+        localStorage.removeItem(`coloring-canvas-state-${activeImage.id}`);
       } catch (err) {
-        console.warn('Error clearing localStorage on reset:', err);
+        console.warn('Error al limpiar localStorage:', err);
       }
       setPaintRevision(0);
 
@@ -346,37 +405,64 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
       const ctx = canvas.getContext('2d', { willReadFrequently: true });
       if (!ctx) return;
 
+      syncCanvasResolution(canvas);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // 4. Redibujar la Imagen Base con matemática de recorte/zoom y restablecer el snapshot inicial
-      drawBaseImage(ctx, canvas, () => {
-        if (!canvasRef.current) return;
-        const currentCtx = canvasRef.current.getContext('2d', {
-          willReadFrequently: true,
-        });
-        if (!currentCtx) return;
+      // 4. Redibujar la Imagen Base original usando la función unificada drawOptimizedImage
+      if (activeImage.imagePath) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
 
-        const baseState = currentCtx.getImageData(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
+        img.onload = () => {
+          if (!canvasRef.current) return;
+          const activeCtx = canvasRef.current.getContext('2d', {
+            willReadFrequently: true,
+          });
+          if (!activeCtx) return;
+
+          syncCanvasResolution(canvasRef.current);
+          drawOptimizedImage(activeCtx, img, canvasRef.current, zoomFactor);
+
+          if (typeof activeImage.renderLineArt === 'function') {
+            activeImage.renderLineArt(
+              activeCtx,
+              canvasRef.current.width,
+              canvasRef.current.height
+            );
+          }
+
+          const baseState = activeCtx.getImageData(
+            0,
+            0,
+            canvasRef.current.width,
+            canvasRef.current.height
+          );
+          historyStack.current = [baseState];
+          setHistoryLength(1);
+          if (onCanUndoChange) onCanUndoChange(false);
+        };
+
+        img.src = activeImage.imagePath;
+      } else if (typeof activeImage.renderLineArt === 'function') {
+        activeImage.renderLineArt(ctx, canvas.width, canvas.height);
+        const baseState = ctx.getImageData(0, 0, canvas.width, canvas.height);
         historyStack.current = [baseState];
         setHistoryLength(1);
         if (onCanUndoChange) onCanUndoChange(false);
-      });
-    }, [currentPage.id, drawBaseImage, onCanUndoChange]);
+      }
+    }, [activeImage, zoomFactor, onCanUndoChange, syncCanvasResolution]);
 
     const handleSave = useCallback(() => {
       const canvas = canvasRef.current;
-      if (!canvas) return;
+      if (!canvas || !activeImage) return;
 
       const link = document.createElement('a');
-      link.download = `Our-Craft-${currentPage.id}-${Date.now()}.png`;
+      link.download = `Our-Craft-${activeImage.id}-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
-    }, [currentPage.id]);
+    }, [activeImage]);
 
     useImperativeHandle(
       ref,
@@ -398,7 +484,7 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
           onTouchStart={handleTouchStart}
           className="w-full h-full block rounded-3xl cursor-crosshair active:scale-[0.999] transition-transform touch-none"
           style={{ imageRendering: 'auto' }}
-          aria-label={currentPage.title.es}
+          aria-label={activeImage ? activeImage.title.es : 'Lienzo de dibujo'}
           role="img"
         />
       </div>

@@ -191,7 +191,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             <button
               type="button"
               disabled
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-stone-400 bg-stone-100 border border-stone-200/60 cursor-not-allowed select-none"
+              tabIndex={-1}
+              aria-disabled="true"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-stone-400 bg-stone-100 border border-stone-200/60 opacity-50 pointer-events-none select-none cursor-not-allowed shadow-none"
             >
               <Lock className="w-3 h-3 text-stone-400" />
               <span>{isEs ? 'Próximamente' : 'Coming Soon'}</span>

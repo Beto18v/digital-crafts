@@ -83,6 +83,7 @@ export const ColoringStudio: React.FC<ColoringStudioProps> = ({
         {/* Central HTML5 Canvas */}
         <ColoringCanvas
           ref={canvasRef}
+          currentImage={currentPage}
           currentPage={currentPage}
           currentColor={currentColor}
           onCanUndoChange={setCanUndo}
