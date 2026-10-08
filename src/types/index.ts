@@ -25,4 +25,7 @@ export interface ProjectCardInfo {
   accentGradient: string;
   featured?: boolean;
   category: LocalizedString;
+  actionLabel?: LocalizedString;
+  isDemo?: boolean;
+  disabled?: boolean;
 }

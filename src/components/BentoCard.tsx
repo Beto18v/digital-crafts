@@ -103,20 +103,32 @@ export const BentoCard: React.FC<BentoCardProps> = ({
 
     if (project.id === 'coloring-canvas') {
       return (
-        <div className="relative w-full h-full min-h-[130px] flex items-center justify-center p-4 select-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent rounded-2xl" />
-          <div className="relative z-10 flex items-center gap-3 bg-white/85 dark:bg-stone-900/85 backdrop-blur-md px-4 py-3 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/70 flex items-center justify-center text-amber-700 dark:text-amber-300">
-              <Palette className="w-5 h-5" />
+        <div className="relative w-full h-full min-h-[170px] flex items-center justify-center p-6 select-none overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-rose-500/5 rounded-2xl" />
+          <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6 w-full max-w-md bg-white/85 dark:bg-stone-900/85 backdrop-blur-md p-5 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-sm group-hover:shadow-md transition-shadow">
+            <div className="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-950/70 flex items-center justify-center text-amber-700 dark:text-amber-300 shadow-inner shrink-0 group-hover:scale-105 transition-transform">
+              <Palette className="w-7 h-7" />
             </div>
-            <div className="flex gap-1.5 items-center">
-              {['#f43f5e', '#fb923c', '#eab308', '#10b981', '#06b6d4'].map((c, i) => (
-                <span
-                  key={i}
-                  style={{ backgroundColor: c }}
-                  className="w-3.5 h-3.5 rounded-full ring-1 ring-white/60 dark:ring-stone-800 shadow-2xs group-hover:scale-110 transition-transform"
-                />
-              ))}
+            <div className="text-left flex-1 min-w-0">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-amber-800/80 dark:text-amber-300 font-semibold block">
+                {isEs ? 'Lienzo Interactivo · 10 Láminas' : 'Interactive Canvas · 10 Pages'}
+              </span>
+              <h4 className="font-serif text-base font-semibold text-stone-900 dark:text-stone-100 truncate">
+                {isEs ? 'Acuarelas & Bote de Relleno' : 'Watercolors & Flood Fill'}
+              </h4>
+              <div className="flex gap-1.5 items-center mt-1.5">
+                {['#f43f5e', '#fb923c', '#eab308', '#10b981', '#06b6d4', '#8b5cf6'].map((c, i) => (
+                  <span
+                    key={i}
+                    style={{ backgroundColor: c }}
+                    className="w-3.5 h-3.5 rounded-full ring-1 ring-white/60 dark:ring-stone-800 shadow-2xs group-hover:scale-110 transition-transform"
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="hidden sm:flex flex-col items-end text-xs text-stone-400 font-mono">
+              <span className="text-amber-600 dark:text-amber-400 font-semibold">🎨 Live</span>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-sans font-medium">100% Ready</span>
             </div>
           </div>
         </div>
@@ -316,18 +328,34 @@ export const BentoCard: React.FC<BentoCardProps> = ({
               onClick={() => onOpen(project)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white dark:text-stone-900 bg-stone-900 dark:bg-stone-100 hover:bg-rose-950 dark:hover:bg-rose-200 active:scale-[0.98] transition-all shadow-xs cursor-pointer group/btn"
             >
-              <span>{isEs ? 'Abrir Experiencia' : 'Open Experience'}</span>
+              <span>{project.actionLabel ? project.actionLabel[lang] : isEs ? 'Abrir Experiencia' : 'Open Experience'}</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-stone-300 dark:text-stone-700 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
             </button>
           ) : isInProgress ? (
-            <button
-              type="button"
-              onClick={() => onOpen(project)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/40 transition-colors cursor-pointer"
-            >
-              <span>{isEs ? 'Ver Avance' : 'Preview'}</span>
-              <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-            </button>
+            project.disabled ? (
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-stone-500 dark:text-stone-400 bg-stone-100/80 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700/60 opacity-75 pointer-events-none select-none"
+              >
+                <span>{project.actionLabel ? project.actionLabel[lang] : isEs ? 'Ver avance' : 'Preview'}</span>
+                <Sparkles className="w-3.5 h-3.5 text-stone-400" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onOpen(project)}
+                className={cn(
+                  'inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-colors',
+                  project.isDemo
+                    ? 'text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/40 opacity-90 cursor-pointer'
+                    : 'text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/40 cursor-pointer'
+                )}
+              >
+                <span>{project.actionLabel ? project.actionLabel[lang] : isEs ? 'Ver avance' : 'Preview'}</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              </button>
+            )
           ) : (
             <div className="inline-flex items-center gap-1.5 text-xs text-stone-400 dark:text-stone-500 font-medium select-none">
               <Lock className="w-3.5 h-3.5" />
