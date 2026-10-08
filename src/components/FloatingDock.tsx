@@ -9,7 +9,6 @@ import {
   Home,
   LayoutGrid,
   Heart,
-  Globe,
   ArrowUp,
   Sun,
   Moon,
@@ -44,15 +43,11 @@ const TEXTOS = {
     tooltip: 'Volver arriba',
     ariaLabel: 'Subir suavemente al inicio',
   },
-  idioma: {
-    tooltip: 'Idioma',
-    ariaLabel: 'Cambiar idioma',
-  },
 };
 
 interface FloatingDockProps {
-  lang: Language;
-  onToggleLang: () => void;
+  lang?: Language;
+  onToggleLang?: () => void;
   onScrollToTop: () => void;
   onScrollToBento: () => void;
   onLoveSparkle?: () => void;
@@ -174,8 +169,6 @@ const MagneticButton: React.FC<MagneticButtonProps> = ({
 };
 
 export const FloatingDock: React.FC<FloatingDockProps> = ({
-  lang,
-  onToggleLang,
   onScrollToTop,
   onScrollToBento,
   onLoveSparkle,
@@ -230,19 +223,7 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
         {/* Separador romántico */}
         <div className="h-5 w-px bg-stone-300/60 dark:bg-stone-700/60 mx-0.5" aria-hidden="true" />
 
-        {/* 4. Selector de Idioma */}
-        <MagneticButton
-          onClick={onToggleLang}
-          tooltip={TEXTOS.idioma.tooltip}
-          ariaLabel={TEXTOS.idioma.ariaLabel}
-        >
-          <div className="flex items-center gap-1 font-mono text-xs font-bold tracking-tight text-stone-700 dark:text-stone-200">
-            <Globe className="w-3.5 h-3.5 text-stone-400 dark:text-stone-400" />
-            <span className="uppercase">{lang}</span>
-          </div>
-        </MagneticButton>
-
-        {/* 5. Luz de velas / Noche estrellada */}
+        {/* 4. Luz de velas / Noche estrellada */}
         <MagneticButton
           onClick={onToggleTheme}
           tooltip={isDarkMode ? TEXTOS.temaClaro.tooltip : TEXTOS.temaOscuro.tooltip}

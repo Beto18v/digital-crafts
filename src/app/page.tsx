@@ -171,8 +171,6 @@ export default function Page() {
 
       {/* Dock dinámico inferior */}
       <FloatingDock
-        lang={lang}
-        onToggleLang={() => setLang(lang === 'es' ? 'en' : 'es')}
         onScrollToTop={scrollToTop}
         onScrollToBento={scrollToBento}
         onLoveSparkle={triggerLoveSparkle}
