@@ -9,7 +9,7 @@ import { ProjectModal } from '../components/ProjectModal';
 import { ColoringStudio } from '../components/ColoringStudio';
 import { projects } from '../data/projects';
 import { Language, ProjectCardInfo } from '../types';
-import { Heart, Palette, Layers } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Page() {
@@ -109,50 +109,6 @@ export default function Page() {
 
   return (
     <div className="relative min-h-screen bg-[#faf7f2] dark:bg-[#121013] text-stone-800 dark:text-stone-100 antialiased selection:bg-rose-200 dark:selection:bg-rose-900 selection:text-stone-900 dark:selection:text-rose-100 overflow-x-clip transition-colors duration-300">
-      {/* Discreet Quiet Top Brand Bar */}
-      <div className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-6 sm:px-10 py-5 pointer-events-none">
-        <div className="flex items-center gap-3 pointer-events-auto">
-          <button
-            type="button"
-            onClick={() => setViewMode('hub')}
-            className="flex items-center gap-2 group text-left cursor-pointer"
-          >
-            <span className="font-serif text-lg font-medium tracking-tight text-stone-900 dark:text-stone-100 group-hover:text-rose-950 dark:group-hover:text-rose-300 transition-colors">
-              Our Digital Crafts
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
-          </button>
-        </div>
-
-        {/* View Switcher Pills */}
-        <div className="pointer-events-auto flex items-center gap-1.5 p-1 rounded-full bg-white/70 dark:bg-stone-900/80 backdrop-blur-md border border-stone-200/80 dark:border-white/10 shadow-2xs">
-          <button
-            type="button"
-            onClick={() => setViewMode('hub')}
-            className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-all ${
-              viewMode === 'hub'
-                ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 shadow-2xs'
-                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>{isEs ? 'Catálogo' : 'Hub'}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('coloring')}
-            className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-all ${
-              viewMode === 'coloring'
-                ? 'bg-rose-600 text-white shadow-2xs'
-                : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
-            }`}
-          >
-            <Palette className="w-3.5 h-3.5" />
-            <span>{isEs ? 'Lienzo para Colorear' : 'Coloring Canvas'}</span>
-          </button>
-        </div>
-      </div>
-
       {/* Love Sparkle Floating Toast Notification */}
       <AnimatePresence>
         {showLoveToast && (
@@ -173,7 +129,7 @@ export default function Page() {
       </AnimatePresence>
 
       {/* Main Solid Content Container (Lifts like a curtain to reveal the footer below) */}
-      <main className="relative z-10 bg-[#faf7f2] dark:bg-[#121013] shadow-[0_25px_60px_rgba(40,20,20,0.08)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.6)] mb-[480px] sm:mb-[540px] md:mb-[580px] rounded-b-[2.5rem] sm:rounded-b-[3.5rem] border-b border-stone-200/80 dark:border-white/10 transition-colors duration-300 pt-16">
+      <main className="relative z-10 bg-[#faf7f2] dark:bg-[#121013] shadow-[0_25px_60px_rgba(40,20,20,0.08)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.6)] mb-[480px] sm:mb-[540px] md:mb-[580px] rounded-b-[2.5rem] sm:rounded-b-[3.5rem] border-b border-stone-200/80 dark:border-white/10 transition-colors duration-300">
         {viewMode === 'hub' ? (
           <>
             {/* Hero Section */}
@@ -200,7 +156,7 @@ export default function Page() {
           </>
         ) : (
           /* Interactive Coloring Studio */
-          <div className="pt-4 pb-16">
+          <div className="pt-8 sm:pt-12 pb-16">
             <ColoringStudio
               lang={lang}
               onBackToHub={() => setViewMode('hub')}
