@@ -193,11 +193,12 @@ export const BentoCard: React.FC<BentoCardProps> = ({
         ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={{ y: -4, scale: 1.01 }}
+      style={{ willChange: 'transform, opacity' }}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        'group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-white/90 dark:bg-[#1a171c]/90 p-6 sm:p-7 md:p-8 backdrop-blur-md border border-stone-200/80 dark:border-white/10 transition-all duration-300 shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_40px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_20px_45px_rgba(0,0,0,0.5)] hover:border-stone-400/80 dark:hover:border-rose-400/30',
+        'group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-white/90 dark:bg-[#1a171c]/90 p-6 sm:p-7 md:p-8 backdrop-blur-md border border-stone-200/80 dark:border-white/10 transition-[box-shadow,border-color] duration-300 shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_40px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_20px_45px_rgba(0,0,0,0.5)] hover:border-stone-400/80 dark:hover:border-rose-400/30',
         project.layoutSpan
       )}
     >

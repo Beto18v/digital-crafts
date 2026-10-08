@@ -622,3 +622,5 @@ export const ColoringCanvas = forwardRef<ColoringCanvasHandle, ColoringCanvasPro
 );
 
 ColoringCanvas.displayName = 'ColoringCanvas';
+
+export default ColoringCanvas;

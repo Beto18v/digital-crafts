@@ -109,3 +109,5 @@ export const ColoringStudio: React.FC<ColoringStudioProps> = ({
     </section>
   );
 };
+
+export default ColoringStudio;

@@ -73,7 +73,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
                 key={tab.id}
                 type="button"
                 onClick={() => onFilterChange(tab.id)}
-                className={`px-3.5 py-1.5 rounded-xl transition-all duration-200 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-xl transition-colors duration-200 cursor-pointer ${
                   activeFilter === tab.id && !isOnlyFavorites
                     ? 'bg-white dark:bg-stone-900 text-stone-950 dark:text-white font-semibold shadow-2xs'
                     : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
