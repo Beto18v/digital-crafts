@@ -12,39 +12,51 @@ const TEXTOS = {
   colorPersonalizadoTitulo: 'Paleta personalizada',
 };
 
+/**
+ * Paleta Premium, relajante y sofisticada de 24 colores armónicos:
+ * - Neutros & Tierras: Lino, Beige, Arena, Almendra
+ * - Rosas Empolvados & Terracota: Pétalo, Rosa Ceniza, Rosa Empolvado, Terracota, Teja
+ * - Mostazas Suaves & Ocre: Vainilla, Mostaza Suave, Ocre Atardecer
+ * - Botánicos & Salvia: Salvia Clara, Verde Salvia, Eucalipto Mate, Verde Oliva, Bosque
+ * - Azul Acero & Lavanda: Bruma Celeste, Azul Acero Suave, Azul Acero, Lavanda Empolvada, Malva
+ * - Tonos Profundos: Azul Pizarra, Azul Marino Íntimo
+ */
 export const PRESET_COLORS = [
-  // Rosas & Románticos
-  { hex: '#f43f5e', name: 'Rosa Romántico' },
-  { hex: '#fda4af', name: 'Pétalo Suave' },
-  { hex: '#fecdd3', name: 'Rosa Pastel' },
-  { hex: '#e11d48', name: 'Cereza Enamorada' },
+  // 1. Neutros Cálidos (Lino, Beige, Arena)
+  { hex: '#fcfaf7', name: 'Lino Puro' },
+  { hex: '#f5efe6', name: 'Beige Cálido' },
+  { hex: '#e8dcce', name: 'Arena del Desierto' },
+  { hex: '#d5c4b1', name: 'Almendra Tostada' },
 
-  // Cálidos & Atardecer
-  { hex: '#fb923c', name: 'Melocotón Cálido' },
-  { hex: '#f97316', name: 'Terracota' },
-  { hex: '#ea580c', name: 'Atardecer Juntos' },
-  { hex: '#fef08a', name: 'Vainilla Suave' },
-  { hex: '#facc15', name: 'Miel Dorada' },
+  // 2. Rosas Empolvados & Terracota
+  { hex: '#eed5d2', name: 'Pétalo Empolvado' },
+  { hex: '#e0aba6', name: 'Rosa Ceniza' },
+  { hex: '#c97a7e', name: 'Rosa Empolvado' },
+  { hex: '#c26d5c', name: 'Terracota Cálido' },
+  { hex: '#a34839', name: 'Teja Profunda' },
 
-  // Botánicos & Calma
-  { hex: '#86efac', name: 'Menta Fresca' },
-  { hex: '#4ade80', name: 'Verde Salvia' },
-  { hex: '#16a34a', name: 'Eucalipto' },
-  { hex: '#14532d', name: 'Pino Bosque' },
+  // 3. Mostazas Suaves & Ocre
+  { hex: '#ecd69c', name: 'Vainilla Dorada' },
+  { hex: '#deb86a', name: 'Mostaza Suave' },
+  { hex: '#b98c47', name: 'Ocre Atardecer' },
 
-  // Celestes & Lavanda
-  { hex: '#a5f3fc', name: 'Brisa Serena' },
-  { hex: '#38bdf8', name: 'Azul Agua' },
-  { hex: '#0284c7', name: 'Azul Noche' },
-  { hex: '#c084fc', name: 'Lavanda Dulce' },
-  { hex: '#7c3aed', name: 'Violeta Profundo' },
+  // 4. Verdes Relajantes (Salvia, Oliva, Bosque)
+  { hex: '#d0ded2', name: 'Salvia Clara' },
+  { hex: '#9cb8a3', name: 'Verde Salvia' },
+  { hex: '#728f78', name: 'Eucalipto Mate' },
+  { hex: '#5e6f54', name: 'Verde Oliva' },
+  { hex: '#384936', name: 'Bosque Profundo' },
 
-  // Tierras & Neutros
-  { hex: '#d6d3d1', name: 'Gris Perla' },
-  { hex: '#a8a29e', name: 'Piedra Cálida' },
-  { hex: '#78716c', name: 'Café Tostado' },
-  { hex: '#292524', name: 'Tinta Suave' },
-  { hex: '#ffffff', name: 'Lienzo Blanco' },
+  // 5. Azul Acero & Lavanda
+  { hex: '#cbd5e1', name: 'Bruma Celeste' },
+  { hex: '#94a3b8', name: 'Azul Acero Suave' },
+  { hex: '#64748b', name: 'Azul Acero' },
+  { hex: '#d8d2e8', name: 'Lavanda Empolvada' },
+  { hex: '#a89fc4', name: 'Malva Sereno' },
+
+  // 6. Tonos Profundos Íntimos
+  { hex: '#334155', name: 'Azul Pizarra' },
+  { hex: '#1e293b', name: 'Azul Marino Íntimo' },
 ];
 
 interface ColorPaletteProps {
@@ -64,11 +76,12 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
   );
 
   return (
-    <div className="flex flex-col gap-2 p-3 sm:p-4 rounded-3xl bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl border border-stone-200/80 dark:border-white/10 shadow-sm">
-      <div className="flex items-center justify-between px-1 mb-1">
+    <div className="flex flex-col gap-2.5 p-3.5 sm:p-4 rounded-3xl bg-white/85 dark:bg-stone-900/85 backdrop-blur-xl border border-stone-200/80 dark:border-white/10 shadow-sm transition-all">
+      {/* Indicador de tono seleccionado */}
+      <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2">
           <span
-            className="w-4 h-4 rounded-full border border-stone-300 dark:border-white/20 shadow-2xs"
+            className="w-4 h-4 rounded-full border border-stone-300 dark:border-white/20 shadow-2xs transition-colors"
             style={{ backgroundColor: currentColor }}
           />
           <span className="text-xs font-medium text-stone-700 dark:text-stone-300">
@@ -81,8 +94,8 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
         </span>
       </div>
 
-      {/* Matriz de tonalidades */}
-      <div className="grid grid-cols-8 sm:grid-cols-12 gap-1.5 sm:gap-2">
+      {/* Contenedor responsivo: swipe horizontal en móviles (scrollbar oculta) y envoltorio flexible en tablet/desktop */}
+      <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-2 pt-1 px-1 scrollbar-none sm:flex-wrap sm:overflow-visible">
         {PRESET_COLORS.map((color) => {
           const isSelected = currentColor.toLowerCase() === color.hex.toLowerCase();
           return (
@@ -93,17 +106,17 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
               title={color.name}
               aria-label={color.name}
               style={{ backgroundColor: color.hex }}
-              className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-black/10 dark:border-white/10 transition-all duration-200 cursor-pointer ${
+              className={`relative shrink-0 w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full border border-black/10 dark:border-white/15 transition-all duration-200 cursor-pointer shadow-2xs ${
                 isSelected
-                  ? 'scale-115 ring-2 ring-stone-900 dark:ring-white ring-offset-2 ring-offset-white dark:ring-offset-stone-900 shadow-sm z-10'
-                  : 'hover:scale-105 opacity-90 hover:opacity-100'
+                  ? 'scale-115 ring-2 ring-stone-900 dark:ring-stone-100 ring-offset-2 ring-offset-white dark:ring-offset-stone-900 shadow-md z-10'
+                  : 'hover:scale-105 opacity-95 hover:opacity-100 active:scale-95'
               }`}
             />
           );
         })}
 
-        {/* Pipeta para color libre */}
-        <div className="relative flex items-center justify-center">
+        {/* Pipeta para color personalizado */}
+        <div className="relative shrink-0 flex items-center justify-center">
           <input
             ref={colorInputRef}
             type="color"
@@ -118,7 +131,11 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
             onClick={() => colorInputRef.current?.click()}
             title={TEXTOS.colorPersonalizadoTitulo}
             aria-label={TEXTOS.elegirColorPersonalizado}
-            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-white/20 flex items-center justify-center text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:scale-105 transition-all shadow-2xs cursor-pointer"
+            className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-white/20 flex items-center justify-center text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white transition-all shadow-2xs cursor-pointer ${
+              !activeColorObj
+                ? 'scale-115 ring-2 ring-stone-900 dark:ring-stone-100 ring-offset-2 ring-offset-white dark:ring-offset-stone-900 shadow-md z-10'
+                : 'hover:scale-105 active:scale-95'
+            }`}
           >
             <Pipette className="w-3.5 h-3.5" />
           </button>

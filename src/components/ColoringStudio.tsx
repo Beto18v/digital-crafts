@@ -26,7 +26,7 @@ export const ColoringStudio: React.FC<ColoringStudioProps> = ({
   onBackToHub,
 }) => {
   const [currentPage, setCurrentPage] = useState<ColoringPage>(coloringPages[0]);
-  const [currentColor, setCurrentColor] = useState<string>('#fda4af');
+  const [currentColor, setCurrentColor] = useState<string>('#c97a7e');
   const [canUndo, setCanUndo] = useState<boolean>(false);
 
   const canvasRef = useRef<ColoringCanvasHandle>(null);
