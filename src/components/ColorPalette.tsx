@@ -13,50 +13,69 @@ const TEXTOS = {
 };
 
 /**
- * Paleta Premium, relajante y sofisticada de 24 colores armónicos:
- * - Neutros & Tierras: Lino, Beige, Arena, Almendra
- * - Rosas Empolvados & Terracota: Pétalo, Rosa Ceniza, Rosa Empolvado, Terracota, Teja
- * - Mostazas Suaves & Ocre: Vainilla, Mostaza Suave, Ocre Atardecer
- * - Botánicos & Salvia: Salvia Clara, Verde Salvia, Eucalipto Mate, Verde Oliva, Bosque
- * - Azul Acero & Lavanda: Bruma Celeste, Azul Acero Suave, Azul Acero, Lavanda Empolvada, Malva
- * - Tonos Profundos: Azul Pizarra, Azul Marino Íntimo
+ * Paleta Premium de 40 colores armónicos y sofisticados:
+ * - Tonos de Piel (progresión completa desde porcelana hasta ébano profundo)
+ * - Tonos de Cabello, Madera y Tierra
+ * - Rosas Empolvados, Terracota y Mostazas
+ * - Botánicos, Verde Salvia y Oliva
+ * - Azul Acero, Cielos y Lavanda
+ * - Acentos Vibrantes y Tonos Profundos
  */
 export const PRESET_COLORS = [
-  // 1. Neutros Cálidos (Lino, Beige, Arena)
-  { hex: '#fcfaf7', name: 'Lino Puro' },
-  { hex: '#f5efe6', name: 'Beige Cálido' },
-  { hex: '#e8dcce', name: 'Arena del Desierto' },
-  { hex: '#d5c4b1', name: 'Almendra Tostada' },
+  // 1. Progresión Completa de Tonos de Piel (10 tonos de claro a oscuro)
+  { hex: '#fff6ed', name: 'Piel Porcelana' },
+  { hex: '#fce7d2', name: 'Piel Marfil' },
+  { hex: '#f7d5b8', name: 'Piel Beige Cálido' },
+  { hex: '#ebbe9b', name: 'Piel Arena Dorada' },
+  { hex: '#dba07b', name: 'Piel Melocotón Bronce' },
+  { hex: '#c6845d', name: 'Piel Caramelo Miel' },
+  { hex: '#a8653e', name: 'Piel Canela Tostada' },
+  { hex: '#834927', name: 'Piel Café Avellana' },
+  { hex: '#5c3016', name: 'Piel Cacao Profundo' },
+  { hex: '#381d0f', name: 'Piel Ébano Oscuro' },
 
-  // 2. Rosas Empolvados & Terracota
-  { hex: '#eed5d2', name: 'Pétalo Empolvado' },
-  { hex: '#e0aba6', name: 'Rosa Ceniza' },
-  { hex: '#c97a7e', name: 'Rosa Empolvado' },
-  { hex: '#c26d5c', name: 'Terracota Cálido' },
-  { hex: '#a34839', name: 'Teja Profunda' },
+  // 2. Cabello, Madera y Elementos Tierra (6 tonos)
+  { hex: '#dcc7aa', name: 'Trigo Rubio' },
+  { hex: '#bfa07d', name: 'Roble Claro' },
+  { hex: '#8d6748', name: 'Castaño Cálido' },
+  { hex: '#5d4029', name: 'Nogal Oscuro' },
+  { hex: '#442d1d', name: 'Madera Caoba' },
+  { hex: '#6e5d53', name: 'Ceniza Suave' },
 
-  // 3. Mostazas Suaves & Ocre
-  { hex: '#ecd69c', name: 'Vainilla Dorada' },
-  { hex: '#deb86a', name: 'Mostaza Suave' },
-  { hex: '#b98c47', name: 'Ocre Atardecer' },
+  // 3. Rosas Empolvados, Terracota & Mostazas (8 tonos)
+  { hex: '#fcebe6', name: 'Pétalo Blush' },
+  { hex: '#e8b4b8', name: 'Rosa Ceniza' },
+  { hex: '#cf7a86', name: 'Rosa Empolvado' },
+  { hex: '#c55f52', name: 'Terracota Cálido' },
+  { hex: '#9e3d31', name: 'Teja Quemada' },
+  { hex: '#fae4b5', name: 'Vainilla Seda' },
+  { hex: '#deb76c', name: 'Mostaza Suave' },
+  { hex: '#b5823c', name: 'Ocre Atardecer' },
 
-  // 4. Verdes Relajantes (Salvia, Oliva, Bosque)
-  { hex: '#d0ded2', name: 'Salvia Clara' },
-  { hex: '#9cb8a3', name: 'Verde Salvia' },
-  { hex: '#728f78', name: 'Eucalipto Mate' },
-  { hex: '#5e6f54', name: 'Verde Oliva' },
-  { hex: '#384936', name: 'Bosque Profundo' },
+  // 4. Botánicos, Salvia & Oliva (5 tonos)
+  { hex: '#dbe6dc', name: 'Menta Serena' },
+  { hex: '#a6c4ad', name: 'Verde Salvia' },
+  { hex: '#769880', name: 'Eucalipto Mate' },
+  { hex: '#5f7553', name: 'Verde Oliva' },
+  { hex: '#394d36', name: 'Bosque Verde' },
 
-  // 5. Azul Acero & Lavanda
-  { hex: '#cbd5e1', name: 'Bruma Celeste' },
-  { hex: '#94a3b8', name: 'Azul Acero Suave' },
-  { hex: '#64748b', name: 'Azul Acero' },
-  { hex: '#d8d2e8', name: 'Lavanda Empolvada' },
-  { hex: '#a89fc4', name: 'Malva Sereno' },
+  // 5. Cielos, Azul Acero & Lavandas (6 tonos)
+  { hex: '#d5deeb', name: 'Bruma Celeste' },
+  { hex: '#9cb4cc', name: 'Azul Acero Suave' },
+  { hex: '#5f7d98', name: 'Azul Acero' },
+  { hex: '#e2daf0', name: 'Lavanda Suave' },
+  { hex: '#b4a5cb', name: 'Malva Sereno' },
+  { hex: '#695782', name: 'Amatista Oscuro' },
 
-  // 6. Tonos Profundos Íntimos
-  { hex: '#334155', name: 'Azul Pizarra' },
+  // 6. Acentos Vivos & Neutros Puros (5 tonos)
+  { hex: '#e11d48', name: 'Carmín Pasión' },
+  { hex: '#ea580c', name: 'Mandarina Cálida' },
+  { hex: '#eab308', name: 'Amarillo Sol' },
+  { hex: '#10b981', name: 'Esmeralda Vivo' },
+  { hex: '#2563eb', name: 'Azul Cobalto' },
   { hex: '#1e293b', name: 'Azul Marino Íntimo' },
+  { hex: '#18181b', name: 'Tinta Negra Profunda' },
+  { hex: '#ffffff', name: 'Lienzo Blanco' },
 ];
 
 interface ColorPaletteProps {
@@ -95,7 +114,7 @@ export const ColorPalette: React.FC<ColorPaletteProps> = ({
       </div>
 
       {/* Contenedor responsivo: swipe horizontal en móviles (scrollbar oculta) y envoltorio flexible en tablet/desktop */}
-      <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-2 pt-1 px-1 scrollbar-none sm:flex-wrap sm:overflow-visible">
+      <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-2.5 pt-1 px-1 scrollbar-none sm:flex-wrap sm:overflow-visible">
         {PRESET_COLORS.map((color) => {
           const isSelected = currentColor.toLowerCase() === color.hex.toLowerCase();
           return (
