@@ -47,8 +47,8 @@ export const projects: ProjectCardInfo[] = [
       en: 'Cocina & Veladas',
     },
     actionLabel: {
-      es: 'Ver avance',
-      en: 'Ver avance',
+      es: 'Ver recetario',
+      en: 'Ver recetario',
     },
     isDemo: true,
     tags: [
@@ -76,8 +76,8 @@ export const projects: ProjectCardInfo[] = [
       en: 'Juegos & Conexión',
     },
     actionLabel: {
-      es: 'Ver avance',
-      en: 'Ver avance',
+      es: 'Explorar cartas',
+      en: 'Explorar cartas',
     },
     isDemo: true,
     tags: [

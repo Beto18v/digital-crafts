@@ -8,6 +8,9 @@ import {
   Palette,
   Heart,
   Shuffle,
+  Wine,
+  Clock,
+  Flame,
 } from 'lucide-react';
 import { ProjectCardInfo, Language } from '../types';
 import { cn } from '../lib/utils';
@@ -23,7 +26,7 @@ const TEXTOS = {
   },
   botones: {
     comenzar: 'Comenzar',
-    verAvance: 'Ver avance',
+    verAvance: 'Ver recetas',
     proximamente: 'Próximamente',
   },
   favoritos: {
@@ -31,14 +34,21 @@ const TEXTOS = {
     quitar: 'Quitar de nuestros favoritos',
   },
   artworks: {
-    cocinaSubtitulo: 'Menú sugerido para los dos',
-    cocinaDetalles: '35 min · A la luz de las velas · Música suave',
-    cocinaListo: 'Listo',
+    cocinaKicker: 'Cocina a cuatro manos',
+    cocinaTitulo: 'Pappardelle al Tartufo',
+    cocinaSubtitulo: 'Pasta fresca, trufa blanca & mantequilla dorada',
+    cocinaTiempo: '35 min',
+    cocinaDetalle1: 'Luz de velas',
+    cocinaDetalle2: 'Vino Barolo',
+    cocinaDetalle3: 'Música suave',
     lienzoSubtitulo: 'Lienzo interactivo · Colección de láminas',
     lienzoTitulo: 'Acuarelas & Bote de pintura',
     lienzoListo: 'Listo para pintar',
     tarjetasSubtitulo: '52 Cartas íntimas',
-    tarjetasDetalles: 'Conversaciones & momentos espontáneos',
+    tarjetasTitulo: 'Frasco de Conversaciones',
+    tarjetasDetalles: 'Momentos espontáneos & recuerdos que nos unen',
+    tarjetasDetalle1: 'Preguntas profundas',
+    tarjetasDetalle2: 'Citas sorpresa',
   },
 };
 
@@ -83,7 +93,7 @@ export const BentoCard: React.FC<BentoCardProps> = ({
       }
     : isInProgress
     ? {
-        text: TEXTOS.estados.enProceso,
+        text: project.id === 'date-night-playbook' ? 'Recetas listas' : TEXTOS.estados.enProceso,
         bgClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20',
         dotClass: 'bg-amber-500',
       }
@@ -97,27 +107,50 @@ export const BentoCard: React.FC<BentoCardProps> = ({
   const renderVisualArtwork = () => {
     if (project.id === 'date-night-playbook') {
       return (
-        <div className="relative w-full h-full min-h-[170px] flex items-center justify-center p-6 select-none overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 via-amber-500/5 to-transparent rounded-2xl" />
-          <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6 w-full max-w-md bg-white/80 dark:bg-stone-900/80 backdrop-blur-md p-5 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-sm group-hover:shadow-md transition-shadow">
-            <div className="w-14 h-14 rounded-2xl bg-rose-100 dark:bg-rose-950/70 flex items-center justify-center text-rose-600 dark:text-rose-300 shadow-inner shrink-0 group-hover:scale-105 transition-transform">
-              <Utensils className="w-7 h-7" />
+        <div className="relative w-full h-full min-h-[142px] flex items-center justify-center p-3.5 sm:p-4 select-none overflow-hidden">
+          {/* Fondo cálido a la luz de las velas */}
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-rose-500/15 to-orange-500/10 rounded-2xl" />
+          
+          {/* Tarjeta flotante con estética de menú degustación */}
+          <div className="relative z-10 w-full bg-white/90 dark:bg-stone-900/90 backdrop-blur-md p-4 rounded-2xl border border-amber-200/50 dark:border-white/10 shadow-xs flex flex-col gap-3 group-hover:border-amber-400/40 transition-colors">
+            {/* Cabecera del plato */}
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-100 to-rose-100 dark:from-amber-950/70 dark:to-rose-950/70 flex items-center justify-center text-rose-600 dark:text-rose-300 shadow-inner shrink-0 group-hover:scale-105 transition-transform">
+                <Utensils className="w-5 h-5" />
+              </div>
+              <div className="text-left flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 mb-0.5">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-rose-700 dark:text-rose-300 font-semibold truncate">
+                    {TEXTOS.artworks.cocinaKicker}
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-mono text-stone-500 dark:text-stone-400 bg-stone-100/90 dark:bg-stone-800/90 px-2 py-0.5 rounded-full shrink-0">
+                    <Clock className="w-2.5 h-2.5 text-amber-500" />
+                    <span>{TEXTOS.artworks.cocinaTiempo}</span>
+                  </span>
+                </div>
+                <h4 className="font-serif text-base font-semibold text-stone-900 dark:text-stone-100 truncate leading-snug">
+                  {TEXTOS.artworks.cocinaTitulo}
+                </h4>
+                <p className="text-[11px] text-stone-500 dark:text-stone-400 truncate mt-0.5">
+                  {TEXTOS.artworks.cocinaSubtitulo}
+                </p>
+              </div>
             </div>
-            <div className="text-left flex-1 min-w-0">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-rose-800/80 dark:text-rose-300 font-semibold">
-                {TEXTOS.artworks.cocinaSubtitulo}
+
+            {/* Fila sensorial romántica: Velas, Vino y Ambiente */}
+            <div className="flex items-center justify-between pt-2.5 border-t border-stone-200/60 dark:border-white/10 text-[11px] text-stone-600 dark:text-stone-300">
+              <span className="flex items-center gap-1 font-medium text-stone-700 dark:text-stone-200">
+                <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500/20 animate-pulse" />
+                <span>{TEXTOS.artworks.cocinaDetalle1}</span>
               </span>
-              <h4 className="font-serif text-base font-semibold text-stone-900 dark:text-stone-100 truncate">
-                Truffle Pappardelle & Barolo
-              </h4>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-                {TEXTOS.artworks.cocinaDetalles}
-              </p>
-            </div>
-            <div className="hidden sm:flex flex-col items-end text-xs text-stone-400 font-mono">
-              <span>🍷 100%</span>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-sans font-medium">
-                {TEXTOS.artworks.cocinaListo}
+              <span className="text-stone-300 dark:text-stone-700">·</span>
+              <span className="flex items-center gap-1 font-medium text-stone-700 dark:text-stone-200">
+                <Wine className="w-3.5 h-3.5 text-rose-500" />
+                <span>{TEXTOS.artworks.cocinaDetalle2}</span>
+              </span>
+              <span className="text-stone-300 dark:text-stone-700">·</span>
+              <span className="text-stone-500 dark:text-stone-400 font-serif italic text-xs">
+                {TEXTOS.artworks.cocinaDetalle3}
               </span>
             </div>
           </div>
@@ -163,18 +196,44 @@ export const BentoCard: React.FC<BentoCardProps> = ({
 
     // Default: Adventure Jar
     return (
-      <div className="relative w-full h-full min-h-[130px] flex items-center justify-center p-4 select-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-rose-500/5 to-transparent rounded-2xl" />
-        <div className="relative z-10 bg-white/85 dark:bg-stone-900/85 backdrop-blur-md px-4 py-3 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-xs flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/70 flex items-center justify-center text-purple-700 dark:text-purple-300">
-            <Shuffle className="w-5 h-5" />
+      <div className="relative w-full h-full min-h-[142px] flex items-center justify-center p-3.5 sm:p-4 select-none overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/15 via-rose-500/10 to-transparent rounded-2xl" />
+        <div className="relative z-10 w-full bg-white/90 dark:bg-stone-900/90 backdrop-blur-md p-4 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-xs flex flex-col gap-3 group-hover:border-purple-400/40 transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-purple-100 dark:bg-purple-950/70 flex items-center justify-center text-purple-700 dark:text-purple-300 shrink-0 group-hover:scale-105 transition-transform">
+              <Shuffle className="w-5 h-5" />
+            </div>
+            <div className="text-left flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2 mb-0.5">
+                <span className="text-[10px] uppercase font-mono tracking-wider text-purple-700 dark:text-purple-300 font-semibold truncate">
+                  {TEXTOS.artworks.tarjetasSubtitulo}
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-mono text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 px-2 py-0.5 rounded-full shrink-0">
+                  <Sparkles className="w-2.5 h-2.5 text-purple-500" />
+                  <span>52 cartas</span>
+                </span>
+              </div>
+              <h4 className="font-serif text-base font-semibold text-stone-900 dark:text-stone-100 truncate leading-snug">
+                {TEXTOS.artworks.tarjetasTitulo}
+              </h4>
+              <p className="text-[11px] text-stone-500 dark:text-stone-400 truncate mt-0.5">
+                {TEXTOS.artworks.tarjetasDetalles}
+              </p>
+            </div>
           </div>
-          <div className="text-left">
-            <span className="text-[10px] uppercase font-mono tracking-wider text-purple-700 dark:text-purple-300 font-semibold block">
-              {TEXTOS.artworks.tarjetasSubtitulo}
+          <div className="flex items-center justify-between pt-2.5 border-t border-stone-200/60 dark:border-white/10 text-[11px] text-stone-600 dark:text-stone-300">
+            <span className="flex items-center gap-1 font-medium text-stone-700 dark:text-stone-200">
+              <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" />
+              <span>{TEXTOS.artworks.tarjetasDetalle1}</span>
             </span>
-            <span className="text-xs text-stone-700 dark:text-stone-300 font-medium">
-              {TEXTOS.artworks.tarjetasDetalles}
+            <span className="text-stone-300 dark:text-stone-700">·</span>
+            <span className="flex items-center gap-1 font-medium text-stone-700 dark:text-stone-200">
+              <Sparkles className="w-3.5 h-3.5 text-purple-500" />
+              <span>{TEXTOS.artworks.tarjetasDetalle2}</span>
+            </span>
+            <span className="text-stone-300 dark:text-stone-700">·</span>
+            <span className="text-stone-500 dark:text-stone-400 font-serif italic text-xs">
+              Sin pantallas
             </span>
           </div>
         </div>
@@ -328,10 +387,15 @@ export const BentoCard: React.FC<BentoCardProps> = ({
               <button
                 type="button"
                 onClick={() => onOpen(project)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/40 cursor-pointer transition-colors"
+                className={cn(
+                  'inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all active:scale-[0.98] shadow-2xs group/btn',
+                  project.id === 'date-night-playbook'
+                    ? 'text-rose-950 dark:text-rose-100 bg-rose-100/90 dark:bg-rose-950/60 hover:bg-rose-200/90 dark:hover:bg-rose-900/70 border border-rose-200/80 dark:border-rose-800/50'
+                    : 'text-amber-950 dark:text-amber-100 bg-amber-100/80 dark:bg-amber-950/50 hover:bg-amber-200/80 dark:hover:bg-amber-900/60 border border-amber-200/80 dark:border-amber-800/50'
+                )}
               >
                 <span>{project.actionLabel?.es || TEXTOS.botones.verAvance}</span>
-                <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                <ArrowUpRight className="w-3.5 h-3.5 opacity-70 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
               </button>
             )
           ) : (
