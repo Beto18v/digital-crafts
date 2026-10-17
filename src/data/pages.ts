@@ -39,54 +39,59 @@ const customMetadata: Record<
     subtitle: { es: 'Nuestra historia en un retrato minimalista', en: 'Our story captured in minimalist portrait lines' },
     category: 'Nosotros',
   },
-  '/us/Couple_line_art_illustration_20261007114013.jpg': {
+  '/us/4.jpg': {
     title: { es: 'Nosotros — Abrazo Íntimo', en: 'Us — Warm Embrace' },
     subtitle: { es: 'Líneas suaves para revivir nuestro abrazo favorito', en: 'Soft lines capturing our warmest embrace' },
     category: 'Nosotros',
   },
-  '/us/Couple_posing_outdoors_20261007181050.jpg': {
+  '/us/5.jpg': {
     title: { es: 'Nosotros — Tarde al Aire Libre', en: 'Us — Outdoors Together' },
     subtitle: { es: 'Un paseo al sol lleno de calma y naturaleza', en: 'A sunny walk full of calm and nature' },
     category: 'Nosotros',
   },
-  '/us/Couple_posing_together_line_art_20261007114015.jpg': {
+  '/us/6.jpg': {
     title: { es: 'Nosotros — Sonrisas Juntos', en: 'Us — Smiles Together' },
     subtitle: { es: 'La alegría de estar juntos dibujada con amor', en: 'The joy of being together drawn with love' },
     category: 'Nosotros',
   },
-  '/us/Couple_taking_elevator_mirror_se…_20261007114017.jpg': {
+  '/us/7.jpg': {
     title: { es: 'Nosotros — Selfie en el Espejo', en: 'Us — Elevator Mirror Selfie' },
     subtitle: { es: 'Nuestro clásico recuerdo casual antes de salir', en: 'Our classic spontaneous mirror memory' },
     category: 'Nosotros',
   },
+  '/us/8.jpeg': {
+    title: { es: 'Nosotros — Atardecer Compartido', en: 'Us — Shared Sunset' },
+    subtitle: { es: 'La calidez de compartir el fin del día a tu lado', en: 'The warmth of sharing the end of the day by your side' },
+    category: 'Nosotros',
+  },
 
   // Romántico (public/romantic)
-  '/romantic/Couple_cooking_dinner_together_20261007180918.jpg': {
+  '/romantic/1.jpg': {
     title: { es: 'Romance — Cocinando Juntos', en: 'Romance — Cooking Together' },
     subtitle: { es: 'Compartiendo risas y aromas en la cocina', en: 'Sharing laughter and aromas in the kitchen' },
     category: 'Romántico',
   },
-  '/romantic/Couple_playing_grand_piano_20261007180914.jpg': {
+  '/romantic/2.jpg': {
     title: { es: 'Romance — Dueto al Piano', en: 'Romance — Grand Piano Duet' },
     subtitle: { es: 'Notas y melodías que cuentan nuestra historia', en: 'Notes and harmonies that play our melody' },
     category: 'Romántico',
   },
-  '/romantic/Couple_walking_dog_in_park_20261007180928.jpg': {
+  '/romantic/3.jpg': {
     title: { es: 'Romance — Paseo en el Parque', en: 'Romance — Walk in the Park' },
     subtitle: { es: 'Atardeceres compartidos con nuestro compañero peludo', en: 'Sunsets shared with our furry best friend' },
     category: 'Romántico',
   },
-  '/romantic/Couple_working_out_at_gym_20261007180910.jpg': {
+  '/romantic/4.jpg': {
     title: { es: 'Romance — Entrenando en Pareja', en: 'Romance — Gym Partners' },
     subtitle: { es: 'Motivación mutua y complicidad en cada reto', en: 'Mutual motivation and energy in every challenge' },
     category: 'Romántico',
   },
-  '/romantic/Symmetrical_heart_formed_by_ribbons_20261007180930.jpg': {
+  '/romantic/5.jpg': {
     title: { es: 'Romance — Corazón en Cintas', en: 'Romance — Ribbon Heart' },
     subtitle: { es: 'Geometría suave y simétrica en forma de corazón', en: 'Symmetrical delicate heart contours' },
     category: 'Romántico',
   },
-  '/romantic/Two_hands_holding_each_other_20261007180928.jpg': {
+  '/romantic/6.jpg': {
     title: { es: 'Romance — Manos Entrelazadas', en: 'Romance — Intertwined Hands' },
     subtitle: { es: 'Un pacto de caminar juntos paso a paso', en: 'A quiet promise to walk hand in hand' },
     category: 'Romántico',
@@ -103,9 +108,9 @@ const customMetadata: Record<
     subtitle: { es: 'Patrones simétricos y relajantes a cuatro manos', en: 'Symmetrical, relaxing patterns for two' },
     category: 'Mandalas',
   },
-  '/mandalas/Dog_and_cat_sleeping_together_20261007180923.jpg': {
-    title: { es: 'Mandalas — Sueño en Paz (Perro y Gato)', en: 'Mandalas — Sleeping Companions (Dog & Cat)' },
-    subtitle: { es: 'Ternura animal y calma absoluta para colorear juntos', en: 'Peaceful rest and sweetness to color together' },
+  '/mandalas/3.jpg': {
+    title: { es: 'Mandala de la Paz y Ternura', en: 'Mandala of Peace & Sweetness' },
+    subtitle: { es: 'Ternura y calma absoluta para colorear juntos', en: 'Peaceful rest and sweetness to color together' },
     category: 'Mandalas',
   },
 };
