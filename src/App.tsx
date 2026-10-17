@@ -23,6 +23,10 @@ const CoupleQuizGame = lazy(() => import('./components/CoupleQuizGame'));
 const RiddleDuelGame = lazy(() => import('./components/RiddleDuelGame'));
 const WouldYouRatherGame = lazy(() => import('./components/WouldYouRatherGame'));
 const IfIWereGame = lazy(() => import('./components/IfIWereGame'));
+const CoupleGlassesGame = lazy(() => import('./components/CoupleGlassesGame'));
+const SecretCodeGame = lazy(() => import('./components/SecretCodeGame'));
+const DiceStoryGame = lazy(() => import('./components/DiceStoryGame'));
+const StickFigureGame = lazy(() => import('./components/StickFigureGame'));
 
 /**
  * Textos centralizados de la página principal.
@@ -79,7 +83,16 @@ export default function App() {
   const [activeModalProject, setActiveModalProject] = useState<ProjectCardInfo | null>(null);
   const [showLoveToast, setShowLoveToast] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<
-    'hub' | 'coloring' | 'couple-quiz' | 'riddle-duel' | 'would-you-rather' | 'if-i-were'
+    | 'hub'
+    | 'coloring'
+    | 'couple-quiz'
+    | 'riddle-duel'
+    | 'would-you-rather'
+    | 'if-i-were'
+    | 'couple-glasses'
+    | 'secret-code'
+    | 'dice-story'
+    | 'stick-figure'
   >('hub');
 
   // Modo Oscuro persistente (Luz de velas vs Noche estrellada)
@@ -133,7 +146,11 @@ export default function App() {
         project.id === 'couple-quiz' ||
         project.id === 'riddle-duel' ||
         project.id === 'would-you-rather' ||
-        project.id === 'if-i-were'
+        project.id === 'if-i-were' ||
+        project.id === 'couple-glasses' ||
+        project.id === 'secret-code' ||
+        project.id === 'dice-story' ||
+        project.id === 'stick-figure'
       );
     }
     if (activeFilter === 'cooking') {
@@ -190,6 +207,18 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (project.id === 'if-i-were') {
       setViewMode('if-i-were');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (project.id === 'couple-glasses') {
+      setViewMode('couple-glasses');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (project.id === 'secret-code') {
+      setViewMode('secret-code');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (project.id === 'dice-story') {
+      setViewMode('dice-story');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (project.id === 'stick-figure') {
+      setViewMode('stick-figure');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setActiveModalProject(project);
@@ -277,11 +306,51 @@ export default function App() {
               />
             </Suspense>
           </div>
-        ) : (
+        ) : viewMode === 'if-i-were' ? (
           /* Juego interactivo "Yo Si Fuera..." (El Espejo de Metáforas) */
           <div className="pt-2 sm:pt-6 pb-16">
             <Suspense fallback={<ColoringLoader />}>
               <IfIWereGame
+                lang={lang}
+                onBack={() => setViewMode('hub')}
+              />
+            </Suspense>
+          </div>
+        ) : viewMode === 'couple-glasses' ? (
+          /* Juego interactivo "Los Vasos de Nuestra Esencia" */
+          <div className="pt-2 sm:pt-6 pb-16">
+            <Suspense fallback={<ColoringLoader />}>
+              <CoupleGlassesGame
+                lang={lang}
+                onBack={() => setViewMode('hub')}
+              />
+            </Suspense>
+          </div>
+        ) : viewMode === 'secret-code' ? (
+          /* Juego interactivo "Nuestro Código Secreto" */
+          <div className="pt-2 sm:pt-6 pb-16">
+            <Suspense fallback={<ColoringLoader />}>
+              <SecretCodeGame
+                lang={lang}
+                onBack={() => setViewMode('hub')}
+              />
+            </Suspense>
+          </div>
+        ) : viewMode === 'dice-story' ? (
+          /* Juego interactivo "Tira el Dado: Historias & Monstruos" */
+          <div className="pt-2 sm:pt-6 pb-16">
+            <Suspense fallback={<ColoringLoader />}>
+              <DiceStoryGame
+                lang={lang}
+                onBack={() => setViewMode('hub')}
+              />
+            </Suspense>
+          </div>
+        ) : (
+          /* Juego interactivo "Completa el Personaje" */
+          <div className="pt-2 sm:pt-6 pb-16">
+            <Suspense fallback={<ColoringLoader />}>
+              <StickFigureGame
                 lang={lang}
                 onBack={() => setViewMode('hub')}
               />

@@ -192,13 +192,13 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
   onFilterChange,
   isOnlyFavorites = false,
   favoritesCount = 0,
-  totalProjectsCount = 6,
+  totalProjectsCount = 10,
 }) => {
   const [showFilters, setShowFilters] = useState(false);
 
   const filterOptions = [
     { id: 'all', label: 'Todos', icon: Sparkles, count: totalProjectsCount },
-    { id: 'games', label: 'Juegos', icon: Gamepad2, count: 4 },
+    { id: 'games', label: 'Juegos', icon: Gamepad2, count: 8 },
     { id: 'art', label: 'Arte', icon: Palette, count: 1 },
     { id: 'cooking', label: 'Veladas', icon: Utensils, count: 1 },
     { id: 'favorites', label: 'Favoritos', icon: Heart, count: favoritesCount },

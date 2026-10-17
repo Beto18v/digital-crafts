@@ -358,6 +358,152 @@ export const BentoCard: React.FC<BentoCardProps> = ({
       );
     }
 
+    if (project.id === 'couple-glasses') {
+      return (
+        <div className="relative w-full h-[148px] flex items-center justify-center p-3 select-none overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/15 via-pink-500/10 to-amber-500/10 rounded-2xl" />
+          <div className="relative z-10 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md p-3 rounded-2xl border border-rose-200/80 dark:border-white/10 shadow-xs flex flex-col gap-2 group-hover:border-rose-400/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg">🥛</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-rose-600 dark:text-rose-400 font-bold">
+                  Según Mi Pareja
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-stone-500 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-full border border-rose-200/50">
+                Líquido Táctil
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="flex items-center justify-between px-2.5 py-1 rounded-xl bg-rose-50/80 dark:bg-rose-950/40 border border-rose-200/60 text-[11px]">
+                <span className="font-semibold text-rose-900 dark:text-rose-200">Cariñosa</span>
+                <span className="font-mono font-bold text-rose-600">100% 💖</span>
+              </div>
+              <div className="flex items-center justify-between px-2.5 py-1 rounded-xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/60 text-[11px]">
+                <span className="font-semibold text-amber-900 dark:text-amber-200">Dramático</span>
+                <span className="font-mono font-bold text-amber-600">45% 🎭</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-1 border-t border-stone-200/60 dark:border-white/10">
+              <span className="italic font-serif truncate">12 Vasos para colorear</span>
+              <span className="text-xs shrink-0">✨ Revelación</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (project.id === 'secret-code') {
+      return (
+        <div className="relative w-full h-[148px] flex items-center justify-center p-3 select-none overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/15 via-rose-500/10 to-pink-500/10 rounded-2xl" />
+          <div className="relative z-10 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md p-3 rounded-2xl border border-amber-200/80 dark:border-white/10 shadow-xs flex flex-col gap-2 group-hover:border-amber-400/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg">🔐</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-700 dark:text-amber-300 font-bold">
+                  Nuestro Código
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-amber-700 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-200/60">
+                A=1 ... Z=26
+              </span>
+            </div>
+
+            <div className="flex items-center justify-center gap-1.5 py-1 text-xs">
+              <span className="px-2 py-1 rounded-lg bg-rose-100 font-mono font-bold text-rose-800">14=N</span>
+              <span className="px-2 py-1 rounded-lg bg-amber-100 font-mono font-bold text-amber-800">9=I</span>
+              <span className="px-2 py-1 rounded-lg bg-pink-100 font-mono font-bold text-pink-800">3=C</span>
+              <span className="px-2 py-1 rounded-lg bg-purple-100 font-mono font-bold text-purple-800">15=O</span>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-1 border-t border-stone-200/60 dark:border-white/10">
+              <span className="italic font-serif truncate">Carta secreta de amor</span>
+              <span className="text-xs shrink-0">💌 Cifrado</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (project.id === 'dice-story') {
+      return (
+        <div className="relative w-full h-[148px] flex items-center justify-center p-3 select-none overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/15 via-blue-500/10 to-purple-500/10 rounded-2xl" />
+          <div className="relative z-10 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md p-3 rounded-2xl border border-emerald-200/80 dark:border-white/10 shadow-xs flex flex-col gap-2 group-hover:border-emerald-400/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg">🎲</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-700 dark:text-emerald-300 font-bold">
+                  Tira un Cuento
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                Dados 3D
+              </span>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 py-0.5 text-xs">
+              <span className="px-2 py-1 rounded-xl bg-rose-50 text-rose-800 font-semibold border border-rose-200 flex items-center gap-1">
+                <span>🧜‍♀️ Sirena</span>
+              </span>
+              <span className="px-2 py-1 rounded-xl bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200 flex items-center gap-1">
+                <span>🐟 Pez</span>
+              </span>
+              <span className="px-2 py-1 rounded-xl bg-blue-50 text-blue-800 font-semibold border border-blue-200 flex items-center gap-1">
+                <span>🌊 Mar</span>
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-1 border-t border-stone-200/60 dark:border-white/10">
+              <span className="italic font-serif truncate">Cuentos & Monstruos</span>
+              <span className="text-xs shrink-0">✨ Risas</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (project.id === 'stick-figure') {
+      return (
+        <div className="relative w-full h-[148px] flex items-center justify-center p-3 select-none overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/15 via-rose-500/10 to-amber-500/10 rounded-2xl" />
+          <div className="relative z-10 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md p-3 rounded-2xl border border-purple-200/80 dark:border-white/10 shadow-xs flex flex-col gap-2 group-hover:border-purple-400/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg">🎨</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-purple-700 dark:text-purple-300 font-bold">
+                  Completa el Muñeco
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-purple-700 bg-purple-50 dark:bg-purple-950/60 px-2 py-0.5 rounded-full border border-purple-200/60">
+                Pictionary
+              </span>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 py-0.5 text-xs">
+              <span className="px-2 py-1 rounded-xl bg-purple-50 text-purple-800 font-semibold border border-purple-200 flex items-center gap-1">
+                <span>🎩 Sombrero</span>
+              </span>
+              <span className="px-2 py-1 rounded-xl bg-pink-50 text-pink-800 font-semibold border border-pink-200 flex items-center gap-1">
+                <span>🕶️ Lentes</span>
+              </span>
+              <span className="px-2 py-1 rounded-xl bg-amber-50 text-amber-800 font-semibold border border-amber-200 flex items-center gap-1">
+                <span>🎈 Globo</span>
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-1 border-t border-stone-200/60 dark:border-white/10">
+              <span className="italic font-serif truncate">15 Retos para dibujar</span>
+              <span className="text-xs shrink-0">✏️ Lienzo táctil</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     // Default: Adventure Jar
     return (
       <div className="relative w-full h-full min-h-[142px] flex items-center justify-center p-3.5 sm:p-4 select-none overflow-hidden">

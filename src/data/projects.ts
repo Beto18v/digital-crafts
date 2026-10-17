@@ -175,4 +175,120 @@ export const projects: ProjectCardInfo[] = [
     layoutSpan: 'col-span-1 md:col-span-1 md:row-span-1',
     accentGradient: 'from-rose-500/10 via-amber-500/5 to-transparent',
   },
+  {
+    id: 'couple-glasses',
+    slug: '/los-vasos-de-nuestra-esencia',
+    title: {
+      es: 'Los Vasos de Nuestra Esencia',
+      en: 'Couple Essence Glasses',
+    },
+    description: {
+      es: '¿Qué tan cariñosos, dramáticos o románticos somos? Llenen los vasos con niveles de líquido interactivo en secreto y revelen su sintonía de pareja.',
+      en: 'How romantic or dramatic are we? Fill the interactive glasses and reveal your couple perception score.',
+    },
+    status: 'Live',
+    category: {
+      es: 'Juegos & Risas',
+      en: 'Games & Fun',
+    },
+    actionLabel: {
+      es: 'Llenar vasos',
+      en: 'Fill glasses',
+    },
+    tags: [
+      { es: 'Según mi pareja', en: 'According to partner' },
+      { es: 'Líquido interactivo', en: 'Interactive liquid' },
+      { es: 'Duelo de sintonía', en: 'Harmony duel' },
+    ],
+    layoutSpan: 'col-span-1 md:col-span-1 md:row-span-1',
+    accentGradient: 'from-rose-500/15 via-amber-500/10 to-orange-500/5',
+    featured: true,
+  },
+  {
+    id: 'secret-code',
+    slug: '/nuestro-codigo-secreto',
+    title: {
+      es: 'Nuestro Código Secreto',
+      en: 'Our Secret Code',
+    },
+    description: {
+      es: 'Descifra el mensaje de amor escondido en números con la tabla A-Z de la lámina original, o escribe cartas cifradas secretas para tu pareja.',
+      en: 'Decode the secret love message using numbers, or write your own encrypted love notes for your partner.',
+    },
+    status: 'Live',
+    category: {
+      es: 'Juegos & Risas',
+      en: 'Games & Fun',
+    },
+    actionLabel: {
+      es: 'Descifrar código',
+      en: 'Decode cipher',
+    },
+    tags: [
+      { es: 'Criptograma', en: 'Cryptogram' },
+      { es: 'Carta de amor', en: 'Love letter' },
+      { es: 'Modo creador', en: 'Creator mode' },
+    ],
+    layoutSpan: 'col-span-1 md:col-span-1 md:row-span-1',
+    accentGradient: 'from-amber-500/15 via-rose-500/10 to-pink-500/5',
+    featured: true,
+  },
+  {
+    id: 'dice-story',
+    slug: '/tira-el-dado',
+    title: {
+      es: 'Tira el Dado: Historias & Monstruos',
+      en: 'Roll the Dice: Stories & Monsters',
+    },
+    description: {
+      es: 'Tira dados animados para armar cuentos locos (Personaje + Problema + Escenario) o crea criaturas combinando cuerpo, ojos, boca y orejas.',
+      en: 'Roll animated dice to build funny stories or procedural cute creatures together.',
+    },
+    status: 'Live',
+    category: {
+      es: 'Juegos & Risas',
+      en: 'Games & Fun',
+    },
+    actionLabel: {
+      es: 'Tirar dados',
+      en: 'Roll dice',
+    },
+    tags: [
+      { es: 'Dados 3D', en: '3D dice' },
+      { es: 'Tira un cuento', en: 'Story dice' },
+      { es: 'Crea monstruos', en: 'Monster maker' },
+    ],
+    layoutSpan: 'col-span-1 md:col-span-1 md:row-span-1',
+    accentGradient: 'from-emerald-500/15 via-blue-500/10 to-purple-500/5',
+    featured: true,
+  },
+  {
+    id: 'stick-figure',
+    slug: '/completa-el-personaje',
+    title: {
+      es: 'Completa el Personaje',
+      en: 'Complete the Stick Figure',
+    },
+    description: {
+      es: 'Viste y dibuja complementos en el muñeco de palitos según la descripción. Modo duelo estilo Pictionary de pareja con adivinanzas en 45s.',
+      en: 'Draw accessories on the stick figure based on the clue. Couple Pictionary pass-and-play mode with timer.',
+    },
+    status: 'Live',
+    category: {
+      es: 'Juegos & Risas',
+      en: 'Games & Fun',
+    },
+    actionLabel: {
+      es: 'Dibujar y adivinar',
+      en: 'Draw and guess',
+    },
+    tags: [
+      { es: '15 Tarjetas', en: '15 Cards' },
+      { es: 'Pictionary en pareja', en: 'Couple pictionary' },
+      { es: 'Dibujo táctil', en: 'Touch drawing' },
+    ],
+    layoutSpan: 'col-span-1 md:col-span-1 md:row-span-1',
+    accentGradient: 'from-purple-500/15 via-rose-500/10 to-amber-500/5',
+    featured: true,
+  },
 ];
