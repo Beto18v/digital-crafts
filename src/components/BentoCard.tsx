@@ -319,34 +319,39 @@ export const BentoCard: React.FC<BentoCardProps> = ({
 
     if (project.id === 'coloring-canvas') {
       return (
-        <div className="relative w-full h-full min-h-[170px] flex items-center justify-center p-6 select-none overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-rose-500/5 rounded-2xl" />
-          <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6 w-full max-w-md bg-white/85 dark:bg-stone-900/85 backdrop-blur-md p-5 rounded-2xl border border-stone-200/80 dark:border-white/10 shadow-sm group-hover:shadow-md transition-shadow">
-            <div className="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-950/70 flex items-center justify-center text-amber-700 dark:text-amber-300 shadow-inner shrink-0 group-hover:scale-105 transition-transform">
-              <Palette className="w-7 h-7" />
-            </div>
-            <div className="text-left flex-1 min-w-0">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-amber-800/80 dark:text-amber-300 font-semibold block">
-                {TEXTOS.artworks.lienzoSubtitulo}
+        <div className="relative w-full h-[148px] flex items-center justify-center p-3.5 sm:p-4 select-none overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-rose-500/10 rounded-2xl" />
+          <div className="relative z-10 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-amber-200/80 dark:border-white/10 shadow-xs flex flex-col gap-2 group-hover:border-amber-400/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🎨</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-700 dark:text-amber-300 font-bold">
+                  Lienzo & Acuarelas
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                Pintar Juntos
               </span>
-              <h4 className="font-serif text-base font-semibold text-stone-900 dark:text-stone-100 truncate">
-                {TEXTOS.artworks.lienzoTitulo}
-              </h4>
-              <div className="flex gap-1.5 items-center mt-1.5">
-                {['#f43f5e', '#fb923c', '#eab308', '#10b981', '#06b6d4', '#8b5cf6'].map((c, i) => (
+            </div>
+
+            <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-900/40 text-xs">
+              <span className="font-serif font-medium text-stone-900 dark:text-stone-100 truncate">
+                Láminas Botánicas & Pareja
+              </span>
+              <div className="flex gap-1 items-center shrink-0">
+                {['#f43f5e', '#fb923c', '#eab308', '#10b981', '#8b5cf6'].map((c, i) => (
                   <span
                     key={i}
                     style={{ backgroundColor: c }}
-                    className="w-3.5 h-3.5 rounded-full ring-1 ring-white/60 dark:ring-stone-800 shadow-2xs group-hover:scale-110 transition-transform"
+                    className="w-2.5 h-2.5 rounded-full ring-1 ring-white/60 dark:ring-stone-800"
                   />
                 ))}
               </div>
             </div>
-            <div className="hidden sm:flex flex-col items-end text-xs text-stone-400 font-mono">
-              <span className="text-amber-600 dark:text-amber-400 font-semibold">🎨 Activo</span>
-              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-sans font-medium">
-                {TEXTOS.artworks.lienzoListo}
-              </span>
+
+            <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-1 border-t border-stone-200/60 dark:border-white/10">
+              <span className="italic font-serif truncate">Acuarelas & Bote de pintura</span>
+              <span className="text-xs shrink-0">✨ Sin prisa</span>
             </div>
           </div>
         </div>
@@ -416,7 +421,7 @@ export const BentoCard: React.FC<BentoCardProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        'group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-white/90 dark:bg-[#1a171c]/90 p-6 sm:p-7 md:p-8 backdrop-blur-md border border-stone-200/80 dark:border-white/10 transition-[box-shadow,border-color] duration-300 shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_40px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_20px_45px_rgba(0,0,0,0.5)] hover:border-stone-400/80 dark:hover:border-rose-400/30',
+        'group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-white/90 dark:bg-[#1a171c]/90 p-5 sm:p-5.5 md:p-6 backdrop-blur-md border border-stone-200/80 dark:border-white/10 transition-[box-shadow,border-color] duration-300 shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.35)] hover:shadow-[0_16px_40px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_20px_45px_rgba(0,0,0,0.5)] hover:border-stone-400/80 dark:hover:border-rose-400/30 h-full',
         project.layoutSpan
       )}
     >
@@ -438,7 +443,7 @@ export const BentoCard: React.FC<BentoCardProps> = ({
       )}
 
       {/* Card Header (Category, Status, Favorite Action) */}
-      <div className="relative z-10 flex items-center justify-between gap-3 mb-4">
+      <div className="relative z-10 flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
           {/* Status Indicator Badge */}
           <span
@@ -484,41 +489,41 @@ export const BentoCard: React.FC<BentoCardProps> = ({
       </div>
 
       {/* Center Interactive Artwork / Demonstration Container */}
-      <div className="relative z-10 my-3 rounded-2xl overflow-hidden border border-stone-100/90 dark:border-white/5 bg-stone-50/70 dark:bg-black/30">
+      <div className="relative z-10 my-2 rounded-2xl overflow-hidden border border-stone-100/90 dark:border-white/5 bg-stone-50/70 dark:bg-black/30 h-[148px] shrink-0">
         {renderVisualArtwork()}
       </div>
 
       {/* Card Content (Title, Description, Tags) */}
-      <div className="relative z-10 flex flex-col justify-end mt-4">
-        {/* Title */}
-        <h3
-          className={cn(
-            'font-serif font-medium tracking-tight text-stone-900 dark:text-stone-100 group-hover:text-rose-950 dark:group-hover:text-rose-200 transition-colors mb-2',
-            isFeatured ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'
-          )}
-        >
-          {project.title.es || project.title.en}
-        </h3>
+      <div className="relative z-10 flex flex-col flex-1 justify-between mt-2.5">
+        <div>
+          {/* Title */}
+          <h3
+            className="font-serif font-medium tracking-tight text-stone-900 dark:text-stone-100 group-hover:text-rose-950 dark:group-hover:text-rose-200 transition-colors text-lg sm:text-xl truncate mb-1.5"
+            title={project.title.es || project.title.en}
+          >
+            {project.title.es || project.title.en}
+          </h3>
 
-        {/* Description */}
-        <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed mb-5 line-clamp-2">
-          {project.description.es || project.description.en}
-        </p>
+          {/* Description */}
+          <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed mb-3 line-clamp-2 min-h-[2.5rem]">
+            {project.description.es || project.description.en}
+          </p>
 
-        {/* Tags with clean unboxed styling */}
-        <div className="flex flex-wrap items-center gap-2 mb-5">
-          {project.tags.map((tag, i) => (
-            <span
-              key={i}
-              className="text-[11px] font-medium text-stone-500 dark:text-stone-300 bg-stone-100/80 dark:bg-stone-800/80 px-2 py-0.5 rounded-md"
-            >
-              #{tag.es || tag.en}
-            </span>
-          ))}
+          {/* Tags with clean unboxed styling */}
+          <div className="flex items-center gap-1.5 mb-3.5 h-6 overflow-hidden">
+            {project.tags.map((tag, i) => (
+              <span
+                key={i}
+                className="text-[10.5px] font-medium text-stone-500 dark:text-stone-300 bg-stone-100/80 dark:bg-stone-800/80 px-2 py-0.5 rounded-md whitespace-nowrap"
+              >
+                #{tag.es || tag.en}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* Bottom Bar: Action Trigger with Animated Reveal */}
-        <div className="pt-4 border-t border-stone-100 dark:border-white/10 flex items-center justify-between gap-4">
+        <div className="pt-3 border-t border-stone-100 dark:border-white/10 flex items-center justify-between gap-3 mt-auto">
           <span className="text-xs font-mono text-stone-400 dark:text-stone-500">
             {project.slug}
           </span>

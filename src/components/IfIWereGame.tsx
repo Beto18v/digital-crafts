@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -34,8 +34,13 @@ interface MetaphorAnswer {
 }
 
 export const IfIWereGame: React.FC<IfIWereGameProps> = ({ onBack }) => {
-  const [player1Name] = useState<string>(() => localStorage.getItem('cq_p1_name') || 'Ella');
-  const [player2Name] = useState<string>(() => localStorage.getItem('cq_p2_name') || 'Él');
+  const [player1Name, setPlayer1Name] = useState<string>(() => localStorage.getItem('cq_p1_name') || 'Ella');
+  const [player2Name, setPlayer2Name] = useState<string>(() => localStorage.getItem('cq_p2_name') || 'Él');
+
+  useEffect(() => {
+    localStorage.setItem('cq_p1_name', player1Name);
+    localStorage.setItem('cq_p2_name', player2Name);
+  }, [player1Name, player2Name]);
 
   const [phase, setPhase] = useState<Phase>('setup');
   const [categories, setCategories] = useState<MetaphorCategory[]>([]);
@@ -214,6 +219,36 @@ ${player1Name} & ${player2Name}\n\n`;
             <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 max-w-md mx-auto leading-relaxed">
               ¿Si tu pareja fuera un animal, un lugar o una bebida... cuál sería y por qué? Escriban sus metáforas en secreto y descúbranlas juntos en un collage de recortes.
             </p>
+
+            {/* Configuración de nombres de la pareja */}
+            <div className="mt-4 pt-3 border-t border-emerald-200/50 dark:border-white/10 grid grid-cols-2 gap-3 max-w-sm mx-auto">
+              <div className="text-left">
+                <label className="text-[10px] font-medium text-emerald-800 dark:text-emerald-300 block mb-1">
+                  Pareja 1 (Ella / Nombre):
+                </label>
+                <input
+                  type="text"
+                  value={player1Name}
+                  onChange={(e) => setPlayer1Name(e.target.value)}
+                  placeholder="Ella"
+                  maxLength={15}
+                  className="w-full px-3 py-1.5 text-xs font-semibold rounded-xl bg-white dark:bg-stone-800 border border-emerald-200 dark:border-white/10 text-stone-800 dark:text-stone-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-400"
+                />
+              </div>
+              <div className="text-left">
+                <label className="text-[10px] font-medium text-emerald-800 dark:text-emerald-300 block mb-1">
+                  Pareja 2 (Él / Nombre):
+                </label>
+                <input
+                  type="text"
+                  value={player2Name}
+                  onChange={(e) => setPlayer2Name(e.target.value)}
+                  placeholder="Él"
+                  maxLength={15}
+                  className="w-full px-3 py-1.5 text-xs font-semibold rounded-xl bg-white dark:bg-stone-800 border border-emerald-200 dark:border-white/10 text-stone-800 dark:text-stone-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-400"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Opciones de partida */}

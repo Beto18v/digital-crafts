@@ -109,9 +109,19 @@ export default function App() {
     );
   };
 
+  const handleFilterChange = (filter: string) => {
+    if (filter === 'favorites') {
+      setOnlyFavorites(true);
+      setActiveFilter('favorites');
+    } else {
+      setOnlyFavorites(false);
+      setActiveFilter(filter);
+    }
+  };
+
   // Filtrado de rincones
   const filteredProjects = projects.filter((project) => {
-    if (onlyFavorites && !favorites.includes(project.id)) {
+    if ((onlyFavorites || activeFilter === 'favorites') && !favorites.includes(project.id)) {
       return false;
     }
     if (activeFilter === 'live') {
@@ -120,19 +130,24 @@ export default function App() {
     if (activeFilter === 'games') {
       return (
         project.category.es.toLowerCase().includes('juegos') ||
-        project.id === 'couple-quiz'
+        project.id === 'couple-quiz' ||
+        project.id === 'riddle-duel' ||
+        project.id === 'would-you-rather' ||
+        project.id === 'if-i-were'
       );
     }
     if (activeFilter === 'cooking') {
       return (
         project.category.es.toLowerCase().includes('cocina') ||
-        project.category.en.toLowerCase().includes('culinary')
+        project.category.en.toLowerCase().includes('culinary') ||
+        project.id === 'date-night-playbook'
       );
     }
     if (activeFilter === 'art') {
       return (
         project.category.es.toLowerCase().includes('arte') ||
-        project.category.en.toLowerCase().includes('art')
+        project.category.en.toLowerCase().includes('art') ||
+        project.id === 'coloring-canvas'
       );
     }
     return true;
@@ -218,10 +233,7 @@ export default function App() {
               favorites={favorites}
               onToggleFavorite={handleToggleFavorite}
               activeFilter={activeFilter}
-              onFilterChange={(filter) => {
-                setActiveFilter(filter);
-                setOnlyFavorites(false);
-              }}
+              onFilterChange={handleFilterChange}
               isOnlyFavorites={onlyFavorites}
             />
           </>
@@ -288,6 +300,11 @@ export default function App() {
         onLoveSparkle={triggerLoveSparkle}
         isDarkMode={isDarkMode}
         onToggleTheme={() => setIsDarkMode((prev) => !prev)}
+        activeFilter={activeFilter}
+        onFilterChange={handleFilterChange}
+        isOnlyFavorites={onlyFavorites}
+        favoritesCount={favorites.length}
+        totalProjectsCount={projects.length}
       />
 
       {/* Modal interactivo de avance */}

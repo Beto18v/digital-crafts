@@ -142,7 +142,7 @@ export const projects: ProjectCardInfo[] = [
       { es: 'Colección de láminas', en: 'Colección de láminas' },
       { es: 'Acuarelas', en: 'Acuarelas' },
     ],
-    layoutSpan: 'col-span-1 md:col-span-2 md:row-span-1',
+    layoutSpan: 'col-span-1 md:col-span-1 md:row-span-1',
     accentGradient: 'from-amber-500/10 via-orange-500/5 to-transparent',
     featured: true,
   },

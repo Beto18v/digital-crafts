@@ -31,13 +31,18 @@ interface RiddleDuelGameProps {
 }
 
 export const RiddleDuelGame: React.FC<RiddleDuelGameProps> = ({ onBack }) => {
-  // Nombres de jugadores guardados
-  const [player1Name] = useState<string>(() => {
+  // Nombres de jugadores guardados con sincronización local
+  const [player1Name, setPlayer1Name] = useState<string>(() => {
     return localStorage.getItem('cq_p1_name') || 'Ella';
   });
-  const [player2Name] = useState<string>(() => {
+  const [player2Name, setPlayer2Name] = useState<string>(() => {
     return localStorage.getItem('cq_p2_name') || 'Él';
   });
+
+  useEffect(() => {
+    localStorage.setItem('cq_p1_name', player1Name);
+    localStorage.setItem('cq_p2_name', player2Name);
+  }, [player1Name, player2Name]);
 
   // Estado de juego
   const [phase, setPhase] = useState<'setup' | 'playing' | 'victory'>('setup');
@@ -215,8 +220,38 @@ export const RiddleDuelGame: React.FC<RiddleDuelGameProps> = ({ onBack }) => {
               El que lo adivine gana. Reten sus mentes con pistas progresivas, piensen despacio y compitan con humor por la prenda de la cita.
             </p>
 
+            {/* Configuración de nombres de la pareja */}
+            <div className="mt-4 pt-3 border-t border-amber-200/50 dark:border-white/10 grid grid-cols-2 gap-3 max-w-sm mx-auto">
+              <div className="text-left">
+                <label className="text-[10px] font-medium text-amber-800 dark:text-amber-300 block mb-1">
+                  Pareja 1 (Ella / Nombre):
+                </label>
+                <input
+                  type="text"
+                  value={player1Name}
+                  onChange={(e) => setPlayer1Name(e.target.value)}
+                  placeholder="Ella"
+                  maxLength={15}
+                  className="w-full px-3 py-1.5 text-xs font-semibold rounded-xl bg-white dark:bg-stone-800 border border-amber-200 dark:border-white/10 text-stone-800 dark:text-stone-100 focus:outline-hidden focus:ring-2 focus:ring-amber-400"
+                />
+              </div>
+              <div className="text-left">
+                <label className="text-[10px] font-medium text-amber-800 dark:text-amber-300 block mb-1">
+                  Pareja 2 (Él / Nombre):
+                </label>
+                <input
+                  type="text"
+                  value={player2Name}
+                  onChange={(e) => setPlayer2Name(e.target.value)}
+                  placeholder="Él"
+                  maxLength={15}
+                  className="w-full px-3 py-1.5 text-xs font-semibold rounded-xl bg-white dark:bg-stone-800 border border-amber-200 dark:border-white/10 text-stone-800 dark:text-stone-100 focus:outline-hidden focus:ring-2 focus:ring-amber-400"
+                />
+              </div>
+            </div>
+
             {/* Marcador de meta de puntos */}
-            <div className="mt-5 pt-4 border-t border-amber-200/50 dark:border-white/10 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-4 pt-3 border-t border-amber-200/50 dark:border-white/10 flex flex-wrap items-center justify-center gap-3">
               <span className="text-xs text-stone-600 dark:text-stone-300 font-medium">
                 Gana el primero en llegar a:
               </span>

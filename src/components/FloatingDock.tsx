@@ -12,6 +12,11 @@ import {
   ArrowUp,
   Sun,
   Moon,
+  SlidersHorizontal,
+  Gamepad2,
+  Palette,
+  Utensils,
+  Sparkles,
 } from 'lucide-react';
 import { Language } from '../types';
 
@@ -26,6 +31,10 @@ const TEXTOS = {
   rincones: {
     tooltip: 'Nuestros rincones',
     ariaLabel: 'Explorar nuestros rincones',
+  },
+  filtros: {
+    tooltip: 'Filtrar rincones',
+    ariaLabel: 'Ver categorías y filtros',
   },
   corazon: {
     tooltip: 'Un latido con amor',
@@ -53,6 +62,11 @@ interface FloatingDockProps {
   onLoveSparkle?: () => void;
   isDarkMode: boolean;
   onToggleTheme: () => void;
+  activeFilter?: string;
+  onFilterChange?: (filter: string) => void;
+  isOnlyFavorites?: boolean;
+  favoritesCount?: number;
+  totalProjectsCount?: number;
 }
 
 interface MagneticButtonProps {
@@ -174,13 +188,84 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
   onLoveSparkle,
   isDarkMode,
   onToggleTheme,
+  activeFilter = 'all',
+  onFilterChange,
+  isOnlyFavorites = false,
+  favoritesCount = 0,
+  totalProjectsCount = 6,
 }) => {
+  const [showFilters, setShowFilters] = useState(false);
+
+  const filterOptions = [
+    { id: 'all', label: 'Todos', icon: Sparkles, count: totalProjectsCount },
+    { id: 'games', label: 'Juegos', icon: Gamepad2, count: 4 },
+    { id: 'art', label: 'Arte', icon: Palette, count: 1 },
+    { id: 'cooking', label: 'Veladas', icon: Utensils, count: 1 },
+    { id: 'favorites', label: 'Favoritos', icon: Heart, count: favoritesCount },
+  ];
+
+  const hasCustomFilter = activeFilter !== 'all' || isOnlyFavorites;
+
   return (
     <nav
       role="navigation"
       aria-label="Barra de navegación de nuestro espacio"
       className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto"
     >
+      {/* Submenú de filtros flotante conectado al dock */}
+      <AnimatePresence>
+        {showFilters && (
+          <motion.div
+            initial={{ opacity: 0, y: 12, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+            className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 flex items-center gap-1 sm:gap-1.5 p-1.5 rounded-2xl bg-white/95 dark:bg-stone-900/95 backdrop-blur-2xl border border-stone-200/90 dark:border-white/15 shadow-[0_16px_40px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.7)] z-50 whitespace-nowrap"
+          >
+            {filterOptions.map((opt) => {
+              const Icon = opt.icon;
+              const isActive =
+                opt.id === 'favorites'
+                  ? isOnlyFavorites
+                  : activeFilter === opt.id && !isOnlyFavorites;
+
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => {
+                    if (onFilterChange) {
+                      onFilterChange(opt.id);
+                    }
+                    onScrollToBento();
+                    setShowFilters(false);
+                  }}
+                  className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-200 cursor-pointer ${
+                    isActive
+                      ? 'bg-rose-500 text-white font-semibold shadow-xs'
+                      : 'text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-white/10'
+                  }`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-rose-500/80'}`} />
+                  <span className="text-[11px] sm:text-xs">{opt.label}</span>
+                  {opt.count !== undefined && (
+                    <span
+                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                        isActive
+                          ? 'bg-rose-600 text-white font-bold'
+                          : 'bg-stone-200/70 dark:bg-stone-800 text-stone-500 dark:text-stone-400'
+                      }`}
+                    >
+                      {opt.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div
         initial={{ y: 70, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -203,6 +288,20 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
           ariaLabel={TEXTOS.rincones.ariaLabel}
         >
           <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
+        </MagneticButton>
+
+        {/* 3. Filtros interactivos en el menú inferior */}
+        <MagneticButton
+          onClick={() => setShowFilters((prev) => !prev)}
+          tooltip={hasCustomFilter ? 'Filtro activo (clic para cambiar)' : TEXTOS.filtros.tooltip}
+          ariaLabel={TEXTOS.filtros.ariaLabel}
+        >
+          <div className="relative">
+            <SlidersHorizontal className="w-4 h-4 sm:w-5 sm:h-5 stroke-[1.8]" />
+            {hasCustomFilter && (
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-stone-900 animate-pulse" />
+            )}
+          </div>
         </MagneticButton>
 
         {/* Separador romántico */}

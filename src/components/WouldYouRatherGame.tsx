@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -28,8 +28,13 @@ interface WouldYouRatherGameProps {
 type Phase = 'setup' | 'p1' | 'transition' | 'p2' | 'reveal' | 'summary';
 
 export const WouldYouRatherGame: React.FC<WouldYouRatherGameProps> = ({ onBack }) => {
-  const [player1Name] = useState<string>(() => localStorage.getItem('cq_p1_name') || 'Ella');
-  const [player2Name] = useState<string>(() => localStorage.getItem('cq_p2_name') || 'Él');
+  const [player1Name, setPlayer1Name] = useState<string>(() => localStorage.getItem('cq_p1_name') || 'Ella');
+  const [player2Name, setPlayer2Name] = useState<string>(() => localStorage.getItem('cq_p2_name') || 'Él');
+
+  useEffect(() => {
+    localStorage.setItem('cq_p1_name', player1Name);
+    localStorage.setItem('cq_p2_name', player2Name);
+  }, [player1Name, player2Name]);
 
   const [phase, setPhase] = useState<Phase>('setup');
   const [selectedCategory, setSelectedCategory] = useState<string>('todos');
@@ -228,6 +233,36 @@ Jugado en Nuestro Refugio Digital ✨`;
             <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 max-w-md mx-auto leading-relaxed">
               El dilema definitivo para parejas. No solo eligen qué prefieren: ¡también intentan adivinar qué elegirá el otro para medir su nivel de lectura de mente!
             </p>
+
+            {/* Configuración de nombres de la pareja */}
+            <div className="mt-4 pt-3 border-t border-purple-200/50 dark:border-white/10 grid grid-cols-2 gap-3 max-w-sm mx-auto">
+              <div className="text-left">
+                <label className="text-[10px] font-medium text-purple-800 dark:text-purple-300 block mb-1">
+                  Pareja 1 (Ella / Nombre):
+                </label>
+                <input
+                  type="text"
+                  value={player1Name}
+                  onChange={(e) => setPlayer1Name(e.target.value)}
+                  placeholder="Ella"
+                  maxLength={15}
+                  className="w-full px-3 py-1.5 text-xs font-semibold rounded-xl bg-white dark:bg-stone-800 border border-purple-200 dark:border-white/10 text-stone-800 dark:text-stone-100 focus:outline-hidden focus:ring-2 focus:ring-purple-400"
+                />
+              </div>
+              <div className="text-left">
+                <label className="text-[10px] font-medium text-purple-800 dark:text-purple-300 block mb-1">
+                  Pareja 2 (Él / Nombre):
+                </label>
+                <input
+                  type="text"
+                  value={player2Name}
+                  onChange={(e) => setPlayer2Name(e.target.value)}
+                  placeholder="Él"
+                  maxLength={15}
+                  className="w-full px-3 py-1.5 text-xs font-semibold rounded-xl bg-white dark:bg-stone-800 border border-purple-200 dark:border-white/10 text-stone-800 dark:text-stone-100 focus:outline-hidden focus:ring-2 focus:ring-purple-400"
+                />
+              </div>
+            </div>
 
             <div className="mt-4 pt-3 border-t border-purple-200/50 dark:border-white/10 flex items-center justify-center gap-3">
               <span className="text-xs text-stone-600 dark:text-stone-300 font-medium">

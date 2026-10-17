@@ -9,17 +9,11 @@ import { Sparkles, Heart } from 'lucide-react';
  * Textos centralizados de la galería de proyectos / rincones.
  */
 const TEXTOS = {
-  headerBadgePrefix: '01. Nuestros Rincones',
+  headerBadgePrefix: 'Nuestros Rincones Especiales',
   headerBadgeSuffix: 'experiencias para compartir',
   titleFavorites: 'Nuestros Momentos Favoritos',
-  titleAll: 'Rincones & Experiencias para Nosotros',
-  filterTabs: [
-    { id: 'all', label: 'Todos' },
-    { id: 'games', label: 'Juegos en Pareja' },
-    { id: 'art', label: 'Arte & Calma' },
-    { id: 'cooking', label: 'Cocina & Veladas' },
-    { id: 'live', label: 'Listos para jugar' },
-  ],
+  titleAll: 'Rincones & Juegos para Nosotros',
+  subtitle: 'Juegos interactivos, actividades y detalles pensados para compartir de a dos.',
   emptyState: {
     title: 'Aún no hay momentos guardados aquí',
     description: 'Guarda tus rincones favoritos con el corazón para verlos juntos aquí cuando quieras.',
@@ -47,16 +41,27 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
   onFilterChange,
   isOnlyFavorites,
 }) => {
+  const getFilterLabel = () => {
+    if (isOnlyFavorites) return 'Favoritos';
+    if (activeFilter === 'games') return 'Juegos en Pareja';
+    if (activeFilter === 'art') return 'Arte & Calma';
+    if (activeFilter === 'cooking') return 'Cenas & Veladas';
+    if (activeFilter === 'live') return 'Listos para jugar';
+    return null;
+  };
+
+  const currentFilterLabel = getFilterLabel();
+
   return (
-    <section id="bento-grid" className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-14">
-      {/* Section Header with Segmented Filter Controls */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-stone-200/60 dark:border-white/10">
+    <section id="bento-grid" className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10">
+      {/* Transición cálida del Hero a los Rincones */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6 sm:mb-8 pb-4 sm:pb-5 border-b border-stone-200/70 dark:border-white/10">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1.5">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-rose-600 dark:text-rose-400 font-semibold mb-1.5">
             <Sparkles className="w-3.5 h-3.5 text-rose-500" />
             <span>{TEXTOS.headerBadgePrefix}</span>
-            <span>·</span>
-            <span className="tabular-nums">
+            <span className="text-stone-300 dark:text-stone-600">·</span>
+            <span className="font-normal text-stone-500 dark:text-stone-400">
               {projects.length} {TEXTOS.headerBadgeSuffix}
             </span>
           </div>
@@ -64,32 +69,33 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
           <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-stone-900 dark:text-stone-100 tracking-tight">
             {isOnlyFavorites ? TEXTOS.titleFavorites : TEXTOS.titleAll}
           </h2>
+          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1 font-light">
+            {TEXTOS.subtitle}
+          </p>
         </div>
 
-        {/* Filter Navigation Tabs (Mobile swipeable) */}
-        <div className="w-full md:w-auto overflow-x-auto scrollbar-none pb-1">
-          <div className="inline-flex p-1 bg-stone-200/60 dark:bg-stone-800/80 rounded-2xl text-xs font-medium text-stone-600 dark:text-stone-300 shrink-0">
-            {TEXTOS.filterTabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => onFilterChange(tab.id)}
-                className={`px-3 py-1.5 rounded-xl transition-colors duration-200 whitespace-nowrap cursor-pointer ${
-                  activeFilter === tab.id && !isOnlyFavorites
-                    ? 'bg-white dark:bg-stone-900 text-stone-950 dark:text-white font-semibold shadow-2xs'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+        {/* Indicador discreto si hay filtro activo desde el dock inferior */}
+        {currentFilterLabel && (
+          <div className="flex items-center gap-2 self-start sm:self-end">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-rose-50 dark:bg-rose-950/50 text-rose-900 dark:text-rose-200 border border-rose-200/80 dark:border-rose-900/40">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+              <span>Filtro:</span>
+              <strong className="font-semibold">{currentFilterLabel}</strong>
+            </span>
+            <button
+              type="button"
+              onClick={() => onFilterChange('all')}
+              className="text-xs text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 underline cursor-pointer"
+            >
+              Mostrar todos
+            </button>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Dynamic Responsive Bento Grid */}
+      {/* Cuadrícula compacta y uniforme para PC y Móvil */}
       {projects.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 auto-rows-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr items-stretch">
           {projects.map((project, index) => (
             <BentoCard
               key={project.id}
