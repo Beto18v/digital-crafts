@@ -157,6 +157,165 @@ export const BentoCard: React.FC<BentoCardProps> = ({
         </div>
       );
     }
+    if (project.id === 'couple-quiz') {
+      return (
+        <div className="relative w-full h-full min-h-[155px] flex items-center justify-center p-3.5 sm:p-5 select-none overflow-hidden">
+          {/* Fondo gradiente romántico suave */}
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/15 via-pink-500/10 to-amber-500/10 rounded-2xl" />
+
+          {/* Tarjeta interactiva estilizada como la lámina "¿Qué tanto nos conocemos?" */}
+          <div className="relative z-10 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md p-4 rounded-2xl border border-rose-200/80 dark:border-white/10 shadow-xs flex flex-col gap-2.5 group-hover:border-rose-400/50 transition-colors">
+            {/* Cabecera con pug dog y títulos */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🐶</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-rose-600 dark:text-rose-400 font-bold">
+                  Duelo Secreto
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-stone-500 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-full border border-rose-200/50 dark:border-rose-900/40">
+                5 Paquetes
+              </span>
+            </div>
+
+            {/* Simulación de las columnas Esposa vs Esposo */}
+            <div className="grid grid-cols-2 gap-2 py-1">
+              <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-rose-50/80 dark:bg-rose-950/40 border border-rose-200/60 dark:border-rose-900/40 text-[11px]">
+                <span className="font-semibold text-rose-900 dark:text-rose-200">Ella</span>
+                <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-pulse" />
+              </div>
+              <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-900/40 text-[11px]">
+                <span className="font-semibold text-amber-900 dark:text-amber-200">Él</span>
+                <Heart className="w-3.5 h-3.5 fill-amber-500 text-amber-500 animate-pulse" />
+              </div>
+            </div>
+
+            {/* Micro pie con pug y pregunta de muestra */}
+            <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-1 border-t border-stone-200/60 dark:border-white/10">
+              <span className="italic font-serif truncate">"¿Quién dio el primer paso?"</span>
+              <span className="text-xs shrink-0">✨ 95% sintonía</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    if (project.id === 'riddle-duel') {
+      return (
+        <div className="relative w-full h-full min-h-[155px] flex items-center justify-center p-3.5 sm:p-5 select-none overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-rose-500/10 rounded-2xl" />
+          <div className="relative z-10 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md p-4 rounded-2xl border border-amber-200/80 dark:border-white/10 shadow-xs flex flex-col gap-2.5 group-hover:border-amber-400/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🕵️‍♂️</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-800 dark:text-amber-300 font-bold">
+                  El que Adivina Gana
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-amber-700 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-200/60 dark:border-amber-900/40">
+                Pistas Progresivas
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-900/40 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">📚</span>
+                <span className="font-serif font-semibold text-stone-900 dark:text-stone-100">
+                  El Enigma de la Biblioteca
+                </span>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-amber-600 bg-white dark:bg-stone-800 px-2 py-0.5 rounded-md shadow-2xs">
+                +3 pts
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-1 border-t border-stone-200/60 dark:border-white/10">
+              <span className="italic font-serif truncate">Prenda: Desayuno en la cama 🥐</span>
+              <span className="text-xs shrink-0">Lógica & Deducción</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (project.id === 'would-you-rather') {
+      return (
+        <div className="relative w-full h-full min-h-[155px] flex items-center justify-center p-3.5 sm:p-5 select-none overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/15 via-pink-500/10 to-rose-500/10 rounded-2xl" />
+          <div className="relative z-10 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md p-4 rounded-2xl border border-purple-200/80 dark:border-white/10 shadow-xs flex flex-col gap-2.5 group-hover:border-purple-400/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xl">🔮</span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-purple-700 dark:text-purple-300 font-bold">
+                  Lectura de Mente
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-purple-700 bg-purple-50 dark:bg-purple-950/60 px-2 py-0.5 rounded-full border border-purple-200/60 dark:border-purple-900/40">
+                ¿Esto o Aquello?
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="p-2 rounded-xl bg-purple-50/70 dark:bg-purple-950/40 border border-purple-200/50 text-center">
+                <span className="block text-base mb-0.5">🪵</span>
+                <span className="font-serif text-[11px] font-medium text-stone-900 dark:text-stone-100 truncate block">
+                  Cabaña Nórdica
+                </span>
+              </div>
+              <div className="p-2 rounded-xl bg-pink-50/70 dark:bg-pink-950/40 border border-pink-200/50 text-center">
+                <span className="block text-base mb-0.5">🏝️</span>
+                <span className="font-serif text-[11px] font-medium text-stone-900 dark:text-stone-100 truncate block">
+                  Playa Tropical
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-1 border-t border-stone-200/60 dark:border-white/10">
+              <span className="italic font-serif truncate">¿Qué elegiría tu pareja?</span>
+              <span className="text-xs shrink-0">✨ Telepatía</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (project.id === 'if-i-were') {
+      return (
+        <div className="relative w-full h-full min-h-[155px] flex items-center justify-center p-3.5 sm:p-5 select-none overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-amber-500/10 rounded-2xl" />
+          <div className="relative z-10 w-full bg-white/95 dark:bg-stone-900/95 backdrop-blur-md p-4 rounded-2xl border border-emerald-200/80 dark:border-white/10 shadow-xs flex flex-col gap-2.5 group-hover:border-emerald-400/50 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="px-1.5 py-0.5 text-[11px] font-bold bg-amber-200 text-stone-900 rotate-[-2deg] border border-stone-800/20">Y</span>
+                <span className="px-1.5 py-0.5 text-[11px] font-bold bg-rose-200 text-stone-900 rotate-[2deg] border border-stone-800/20">O</span>
+                <span className="px-1.5 py-0.5 text-[11px] font-bold bg-emerald-200 text-stone-900 rotate-[-1deg] border border-stone-800/20">S</span>
+                <span className="px-1.5 py-0.5 text-[11px] font-bold bg-sky-200 text-stone-900 rotate-[1deg] border border-stone-800/20">I</span>
+                <span className="text-base ml-1">🐶</span>
+              </div>
+              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                Collage Poético
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 p-2 rounded-xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200/60 dark:border-white/5 text-xs">
+              <span className="text-xl">🦊</span>
+              <div className="min-w-0 flex-1">
+                <span className="font-serif text-[11px] font-semibold text-stone-900 dark:text-stone-100 block truncate">
+                  "Si fueras un animal..."
+                </span>
+                <span className="text-[10px] text-stone-400 block truncate">
+                  Metáforas íntimas, cómplices y tiernas
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400 pt-1 border-t border-stone-200/60 dark:border-white/10">
+              <span className="italic font-serif truncate">9 Categorías de recortes</span>
+              <span className="text-xs shrink-0">🎨 Recuerdo</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     if (project.id === 'coloring-canvas') {
       return (

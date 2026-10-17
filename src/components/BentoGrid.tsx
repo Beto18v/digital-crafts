@@ -15,9 +15,10 @@ const TEXTOS = {
   titleAll: 'Rincones & Experiencias para Nosotros',
   filterTabs: [
     { id: 'all', label: 'Todos' },
-    { id: 'live', label: 'Listos para disfrutar' },
-    { id: 'cooking', label: 'Cocina & Veladas' },
+    { id: 'games', label: 'Juegos en Pareja' },
     { id: 'art', label: 'Arte & Calma' },
+    { id: 'cooking', label: 'Cocina & Veladas' },
+    { id: 'live', label: 'Listos para jugar' },
   ],
   emptyState: {
     title: 'Aún no hay momentos guardados aquí',
@@ -47,11 +48,11 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
   isOnlyFavorites,
 }) => {
   return (
-    <section id="bento-grid" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+    <section id="bento-grid" className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-14">
       {/* Section Header with Segmented Filter Controls */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-stone-200/60 dark:border-white/10">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-stone-200/60 dark:border-white/10">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-2">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1.5">
             <Sparkles className="w-3.5 h-3.5 text-rose-500" />
             <span>{TEXTOS.headerBadgePrefix}</span>
             <span>·</span>
@@ -60,20 +61,20 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
             </span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-4xl font-normal text-stone-900 dark:text-stone-100 tracking-tight">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-normal text-stone-900 dark:text-stone-100 tracking-tight">
             {isOnlyFavorites ? TEXTOS.titleFavorites : TEXTOS.titleAll}
           </h2>
         </div>
 
-        {/* Filter Navigation Tabs */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex p-1 bg-stone-200/60 dark:bg-stone-800/80 rounded-2xl text-xs font-medium text-stone-600 dark:text-stone-300">
+        {/* Filter Navigation Tabs (Mobile swipeable) */}
+        <div className="w-full md:w-auto overflow-x-auto scrollbar-none pb-1">
+          <div className="inline-flex p-1 bg-stone-200/60 dark:bg-stone-800/80 rounded-2xl text-xs font-medium text-stone-600 dark:text-stone-300 shrink-0">
             {TEXTOS.filterTabs.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => onFilterChange(tab.id)}
-                className={`px-3.5 py-1.5 rounded-xl transition-colors duration-200 cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl transition-colors duration-200 whitespace-nowrap cursor-pointer ${
                   activeFilter === tab.id && !isOnlyFavorites
                     ? 'bg-white dark:bg-stone-900 text-stone-950 dark:text-white font-semibold shadow-2xs'
                     : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
@@ -88,7 +89,7 @@ export const BentoGrid: React.FC<BentoGridProps> = ({
 
       {/* Dynamic Responsive Bento Grid */}
       {projects.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 auto-rows-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 auto-rows-auto">
           {projects.map((project, index) => (
             <BentoCard
               key={project.id}
